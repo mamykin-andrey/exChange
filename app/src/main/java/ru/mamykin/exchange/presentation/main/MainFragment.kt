@@ -2,6 +2,7 @@ package ru.mamykin.exchange.presentation.main
 
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.fragment_main.*
 import ru.mamykin.exchange.R
 import ru.mamykin.exchange.core.platform.BaseFragment
@@ -19,7 +20,16 @@ class MainFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupToolbar()
         setupViewPager()
+    }
+
+    private fun setupToolbar() {
+        val activity = activity!! as AppCompatActivity
+        activity.setSupportActionBar(toolbar)
+        activity.supportActionBar!!.title = "Rates & conversions"
+        activity.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        activity.supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_close)
     }
 
     private fun setupViewPager() {
