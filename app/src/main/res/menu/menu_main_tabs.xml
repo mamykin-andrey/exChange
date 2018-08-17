@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_courses"
+        android:enabled="true"
+        android:icon="@drawable/ic_launcher_background"
+        android:title="Rates"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_exchange"
+        android:enabled="true"
+        android:icon="@drawable/ic_launcher_background"
+        android:title="Exchange"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_settings"
+        android:enabled="true"
+        android:icon="@drawable/ic_launcher_background"
+        android:title="Settings"
+        app:showAsAction="ifRoom" />
+</menu>
