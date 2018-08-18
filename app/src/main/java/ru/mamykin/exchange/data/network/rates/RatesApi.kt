@@ -2,7 +2,7 @@ package ru.mamykin.exchange.data.network.rates
 
 import retrofit2.http.GET
 import retrofit2.http.Query
-import rx.Observable
+import rx.Single
 
 interface RatesApi {
 
@@ -11,5 +11,5 @@ interface RatesApi {
     }
 
     @GET("latest")
-    fun getRates(@Query("base") baseCurrency: String): Observable<RateListResponse>
+    fun getRates(@Query("base") baseCurrency: String): Single<RateListResponse>
 }

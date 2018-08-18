@@ -1,14 +1,13 @@
-package ru.mamykin.exchange.data.repository
+package ru.mamykin.exchange.data.repository.rates
 
 import ru.mamykin.exchange.data.model.RateList
-import ru.mamykin.exchange.data.network.rates.RatesApi
-import rx.Observable
+import rx.Single
 import javax.inject.Inject
 
 class RatesRepository @Inject constructor(
-        private val api: RatesApi
+        private val dataSource: RatesRemoteDataSource
 ) {
-    fun getRates(baseCurrency: String): Observable<RateList> {
-        return api.getRates(baseCurrency)
+    fun getRates(baseCurrency: String): Single<RateList> {
+        return dataSource.getRates(baseCurrency)
     }
 }

@@ -9,5 +9,5 @@ data class RateListResponse(
         @SerializedName("date")
         val date: Date,
         @SerializedName("rates")
-        val rates: HashMap<String, Float>
+        val rates: Map<String, Float>
 )
