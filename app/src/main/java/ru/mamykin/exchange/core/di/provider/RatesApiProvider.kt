@@ -4,7 +4,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import ru.mamykin.exchange.data.rates.RatesApi
+import ru.mamykin.exchange.data.network.rates.RatesApi
 import javax.inject.Inject
 import javax.inject.Provider
 
