@@ -1,8 +1,9 @@
-package ru.mamykin.exchange.data.repository.rates
+package ru.mamykin.exchange.data.repository.datasource.remote
 
-import ru.mamykin.exchange.data.model.RateList
-import ru.mamykin.exchange.data.network.response.mapper.RateListResponseToRateListMapper
-import ru.mamykin.exchange.data.network.api.RatesApi
+import ru.mamykin.exchange.domain.entity.RateList
+import ru.mamykin.exchange.data.model.mapper.RateListResponseToRateListMapper
+import ru.mamykin.exchange.data.network.RatesApi
+import ru.mamykin.exchange.data.repository.datasource.RatesDataSource
 import rx.Single
 import javax.inject.Inject
 

@@ -1,4 +1,4 @@
-package ru.mamykin.exchange.data.repository.rates
+package ru.mamykin.exchange.data.repository.datasource.remote
 
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
@@ -7,11 +7,12 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import ru.mamykin.exchange.data.model.Rate
-import ru.mamykin.exchange.data.model.RateList
-import ru.mamykin.exchange.data.network.response.mapper.RateListResponseToRateListMapper
-import ru.mamykin.exchange.data.network.response.RateListResponse
-import ru.mamykin.exchange.data.network.api.RatesApi
+import ru.mamykin.exchange.domain.entity.Rate
+import ru.mamykin.exchange.domain.entity.RateList
+import ru.mamykin.exchange.data.model.mapper.RateListResponseToRateListMapper
+import ru.mamykin.exchange.data.model.RateListResponse
+import ru.mamykin.exchange.data.network.RatesApi
+import ru.mamykin.exchange.data.repository.datasource.RatesDataSource
 import rx.Single
 import java.util.*
 

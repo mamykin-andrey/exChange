@@ -1,6 +1,7 @@
-package ru.mamykin.exchange.data.repository.rates
+package ru.mamykin.exchange.data.repository
 
-import ru.mamykin.exchange.data.model.RateList
+import ru.mamykin.exchange.data.repository.datasource.RatesDataSource
+import ru.mamykin.exchange.domain.entity.RateList
 import rx.Single
 import javax.inject.Inject
 

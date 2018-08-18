@@ -1,8 +1,8 @@
-package ru.mamykin.exchange.data.network.response.mapper
+package ru.mamykin.exchange.data.model.mapper
 
-import ru.mamykin.exchange.data.model.Rate
-import ru.mamykin.exchange.data.model.RateList
-import ru.mamykin.exchange.data.network.response.RateListResponse
+import ru.mamykin.exchange.domain.entity.Rate
+import ru.mamykin.exchange.domain.entity.RateList
+import ru.mamykin.exchange.data.model.RateListResponse
 import javax.inject.Inject
 
 class RateListResponseToRateListMapper @Inject constructor() {

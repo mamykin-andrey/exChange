@@ -1,4 +1,4 @@
-package ru.mamykin.exchange.data.repository.rates
+package ru.mamykin.exchange.data.repository
 
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
@@ -6,7 +6,8 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import ru.mamykin.exchange.data.model.RateList
+import ru.mamykin.exchange.data.repository.datasource.RatesDataSource
+import ru.mamykin.exchange.domain.entity.RateList
 import rx.Single
 import java.util.*
 

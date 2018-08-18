@@ -1,4 +1,4 @@
-package ru.mamykin.exchange.data.model
+package ru.mamykin.exchange.domain.entity
 
 import java.util.*
 

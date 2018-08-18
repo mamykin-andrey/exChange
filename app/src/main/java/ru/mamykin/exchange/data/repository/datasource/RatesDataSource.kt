@@ -1,6 +1,6 @@
-package ru.mamykin.exchange.data.repository.rates
+package ru.mamykin.exchange.data.repository.datasource
 
-import ru.mamykin.exchange.data.model.RateList
+import ru.mamykin.exchange.domain.entity.RateList
 import rx.Single
 
 interface RatesDataSource {

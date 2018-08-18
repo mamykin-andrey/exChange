@@ -1,8 +1,8 @@
-package ru.mamykin.exchange.data.network.api
+package ru.mamykin.exchange.data.network
 
 import retrofit2.http.GET
 import retrofit2.http.Query
-import ru.mamykin.exchange.data.network.response.RateListResponse
+import ru.mamykin.exchange.data.model.RateListResponse
 import rx.Single
 
 interface RatesApi {
