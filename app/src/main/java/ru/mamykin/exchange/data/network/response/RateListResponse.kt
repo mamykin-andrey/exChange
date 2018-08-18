@@ -1,4 +1,4 @@
-package ru.mamykin.exchange.data.network.rates
+package ru.mamykin.exchange.data.network.response
 
 import com.google.gson.annotations.SerializedName
 import java.util.*

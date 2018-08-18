@@ -9,9 +9,9 @@ import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import ru.mamykin.exchange.data.model.Rate
 import ru.mamykin.exchange.data.model.RateList
-import ru.mamykin.exchange.data.model.mapper.RateListResponseToRateListMapper
-import ru.mamykin.exchange.data.network.rates.RateListResponse
-import ru.mamykin.exchange.data.network.rates.RatesApi
+import ru.mamykin.exchange.data.network.response.mapper.RateListResponseToRateListMapper
+import ru.mamykin.exchange.data.network.response.RateListResponse
+import ru.mamykin.exchange.data.network.api.RatesApi
 import rx.Single
 import java.util.*
 
