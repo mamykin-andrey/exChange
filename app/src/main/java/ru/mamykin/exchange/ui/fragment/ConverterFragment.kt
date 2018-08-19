@@ -1,9 +1,10 @@
-package ru.mamykin.exchange.presentation.converter
+package ru.mamykin.exchange.ui.fragment
 
 import ru.mamykin.exchange.R
 import ru.mamykin.exchange.core.platform.BaseFragment
+import ru.mamykin.exchange.presentation.view.ConverterView
 
-class ConverterFragment : BaseFragment() {
+class ConverterFragment : BaseFragment(), ConverterView {
 
     companion object {
         fun newInstance() = ConverterFragment()

@@ -1,9 +1,9 @@
-package ru.mamykin.exchange.presentation
+package ru.mamykin.exchange.ui.activity
 
 import android.os.Bundle
 import ru.mamykin.exchange.R
 import ru.mamykin.exchange.core.platform.BaseActivity
-import ru.mamykin.exchange.presentation.main.MainFragment
+import ru.mamykin.exchange.ui.fragment.MainFragment
 
 class RootActivity : BaseActivity() {
 

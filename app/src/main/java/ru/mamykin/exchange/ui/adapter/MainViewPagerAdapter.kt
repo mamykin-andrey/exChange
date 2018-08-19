@@ -1,4 +1,4 @@
-package ru.mamykin.exchange.presentation.main
+package ru.mamykin.exchange.ui.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
