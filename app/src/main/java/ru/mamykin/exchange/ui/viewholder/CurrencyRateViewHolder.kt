@@ -8,13 +8,13 @@ import ru.mamykin.exchange.domain.entity.Rate
 class CurrencyRateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun bind(rate: Rate, currencySelectedFunc: (String) -> Unit) {
-        itemView.currencyCodeTextView!!.text = rate.name
-        itemView.currencyNameTextView!!.text = rate.name
-        itemView.exchangeAmountEditText!!.setText(rate.course.toString())
+        itemView.currencyCodeTextView!!.text = rate.code
+        itemView.currencyNameTextView!!.text = rate.code
+        itemView.exchangeAmountEditText!!.setText(rate.amount.toString())
 
         itemView.exchangeAmountEditText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
-                currencySelectedFunc(rate.name)
+                currencySelectedFunc(rate.code)
             }
         }
     }

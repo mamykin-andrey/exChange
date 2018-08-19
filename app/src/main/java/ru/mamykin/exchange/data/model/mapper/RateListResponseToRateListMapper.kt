@@ -8,7 +8,7 @@ import javax.inject.Inject
 class RateListResponseToRateListMapper @Inject constructor() {
 
     fun transform(response: RateListResponse): RateList {
-        val rates = response.rates.entries.map { Rate(it.key, it.value) }.sortedBy(Rate::name)
+        val rates = response.rates.entries.map { Rate(it.key, it.value) }.sortedBy(Rate::code)
         return RateList(response.base, response.date, rates)
     }
 }

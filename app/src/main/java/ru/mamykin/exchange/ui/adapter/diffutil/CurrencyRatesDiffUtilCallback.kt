@@ -11,7 +11,7 @@ class CurrencyRatesDiffUtilCallback(
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         val oldRate = oldRates[oldItemPosition]
         val newRate = newRates[newItemPosition]
-        return oldRate.name == newRate.name
+        return oldRate.code == newRate.code
     }
 
     override fun getOldListSize(): Int {
@@ -25,6 +25,6 @@ class CurrencyRatesDiffUtilCallback(
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         val oldRate = oldRates[oldItemPosition]
         val newRate = newRates[newItemPosition]
-        return oldRate.name == newRate.name && (oldRate.course - newRate.course) < 0.000000f
+        return oldRate.code == newRate.code && (oldRate.amount - newRate.amount) < 0.000000f
     }
 }
