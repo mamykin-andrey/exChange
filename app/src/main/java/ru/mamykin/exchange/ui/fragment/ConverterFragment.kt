@@ -1,13 +1,18 @@
 package ru.mamykin.exchange.ui.fragment
 
+import android.os.Bundle
+import android.view.View
+import android.widget.Toast
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import kotlinx.android.synthetic.main.fragment_converter.*
 import ru.mamykin.exchange.R
 import ru.mamykin.exchange.core.di.Scopes
 import ru.mamykin.exchange.core.platform.BaseFragment
 import ru.mamykin.exchange.domain.entity.RateList
 import ru.mamykin.exchange.presentation.presenter.ConverterPresenter
 import ru.mamykin.exchange.presentation.view.ConverterView
+import ru.mamykin.exchange.ui.adapter.CurrencyRatesRecyclerAdapter
 import toothpick.Toothpick
 
 class ConverterFragment : BaseFragment(), ConverterView {
@@ -21,10 +26,17 @@ class ConverterFragment : BaseFragment(), ConverterView {
     @InjectPresenter
     lateinit var presenter: ConverterPresenter
 
+    private val adapter = CurrencyRatesRecyclerAdapter()
+
     @ProvidePresenter
     fun provideConverterPresenter(): ConverterPresenter {
         return Toothpick.openScopes(Scopes.APP_SCOPE, this)
                 .getInstance(ConverterPresenter::class.java)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        ratesRecyclerView.adapter = adapter
     }
 
     override fun onFinish() {
@@ -33,10 +45,10 @@ class ConverterFragment : BaseFragment(), ConverterView {
     }
 
     override fun showRateList(rateList: RateList) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        adapter.changeCurrencyRates(rateList.rates)
     }
 
     override fun showLoadingError() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Toast.makeText(context, "Error was occured", Toast.LENGTH_LONG).show()
     }
 }
