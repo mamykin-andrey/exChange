@@ -12,7 +12,7 @@ class CurrencyRateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     fun bind(rate: Rate, currencyOrAmountChangedFunc: (String, Float) -> Unit) {
         itemView.currencyCodeTextView!!.text = rate.code
         itemView.currencyNameTextView!!.text = rate.code
-        itemView.exchangeAmountEditText!!.setText(rate.amount.toString())
+        itemView.exchangeAmountEditText!!.setText(rate.getDisplayAmount().toString())
 
         itemView.exchangeAmountEditText.apply {
             setOnGetFocusListener {

@@ -28,8 +28,8 @@ class CurrencyRatesRecyclerAdapter(
     }
 
     fun changeCurrencyRates(newRates: List<Rate>) {
-        this.rates = newRates
         val diffResult = DiffUtil.calculateDiff(CurrencyRatesDiffUtilCallback(rates, newRates))
         diffResult.dispatchUpdatesTo(this)
+        this.rates = newRates
     }
 }
