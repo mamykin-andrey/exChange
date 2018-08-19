@@ -4,14 +4,14 @@ import org.hamcrest.core.Is.`is`
 import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Test
+import ru.mamykin.exchange.data.model.RateListResponse
 import ru.mamykin.exchange.domain.entity.Rate
 import ru.mamykin.exchange.domain.entity.RateList
-import ru.mamykin.exchange.data.model.RateListResponse
 import java.util.*
 
 class RateListResponseToRateListMapperTest {
 
-    private lateinit var mapper: RateListResponseToRateListMapper
+    lateinit var mapper: RateListResponseToRateListMapper
 
     @Before
     fun setUp() {

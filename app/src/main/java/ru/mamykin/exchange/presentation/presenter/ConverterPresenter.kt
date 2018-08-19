@@ -4,7 +4,7 @@ import com.arellomobile.mvp.InjectViewState
 import io.reactivex.disposables.Disposable
 import ru.mamykin.exchange.core.mvp.BasePresenter
 import ru.mamykin.exchange.domain.interactor.ConverterInteractor
-import ru.mamykin.exchange.presentation.scheduler.SchedulersProvider
+import ru.mamykin.exchange.core.scheduler.SchedulersProvider
 import ru.mamykin.exchange.presentation.view.ConverterView
 import javax.inject.Inject
 

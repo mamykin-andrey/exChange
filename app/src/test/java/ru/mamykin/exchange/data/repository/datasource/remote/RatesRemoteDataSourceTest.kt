@@ -30,7 +30,7 @@ class RatesRemoteDataSourceTest {
     lateinit var rateListResponse: RateListResponse
     lateinit var rateList: RateList
 
-    private lateinit var dataSource: RatesDataSource
+    lateinit var dataSource: RatesDataSource
 
     @Before
     fun setUp() {

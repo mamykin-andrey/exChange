@@ -1,4 +1,4 @@
-package ru.mamykin.exchange.presentation.scheduler
+package ru.mamykin.exchange.core.scheduler
 
 import io.reactivex.Scheduler
 

@@ -1,4 +1,4 @@
-package ru.mamykin.exchange.core.platform
+package ru.mamykin.exchange.core.mvp
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

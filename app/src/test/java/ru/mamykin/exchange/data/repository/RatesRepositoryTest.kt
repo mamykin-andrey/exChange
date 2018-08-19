@@ -20,7 +20,7 @@ class RatesRepositoryTest {
     @Mock
     lateinit var dataSource: RatesDataSource
 
-    private lateinit var repository: RatesRepository
+    lateinit var repository: RatesRepository
 
     @Before
     fun setUp() {

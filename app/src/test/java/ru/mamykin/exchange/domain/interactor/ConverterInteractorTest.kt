@@ -26,9 +26,9 @@ class ConverterInteractorTest {
     @Mock
     lateinit var ratesRepository: RatesRepository
 
-    private val today = Date()
-    private val rateList1 = RateList(TEST_CURRENCY, today, listOf(Rate("USD", 0.148f)))
-    private val rateList2 = RateList(TEST_CURRENCY, today, listOf(Rate("USD", 0.132f)))
+    val today = Date()
+    val rateList1 = RateList(TEST_CURRENCY, today, listOf(Rate("USD", 0.148f)))
+    val rateList2 = RateList(TEST_CURRENCY, today, listOf(Rate("USD", 0.132f)))
 
     lateinit var interactor: ConverterInteractor
 
