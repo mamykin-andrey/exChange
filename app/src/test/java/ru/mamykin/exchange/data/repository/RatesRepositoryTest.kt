@@ -2,13 +2,13 @@ package ru.mamykin.exchange.data.repository
 
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
+import io.reactivex.Single
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import ru.mamykin.exchange.data.repository.datasource.RatesDataSource
 import ru.mamykin.exchange.domain.entity.RateList
-import rx.Single
 import java.util.*
 
 class RatesRepositoryTest {
@@ -33,9 +33,9 @@ class RatesRepositoryTest {
         val rateList = RateList(TEST_CURRENCY, Date(), listOf())
         whenever(dataSource.getRates(TEST_CURRENCY)).thenReturn(Single.just(rateList))
 
-        val testSubscriber = repository.getRates(TEST_CURRENCY).test()
+        val testObserver = repository.getRates(TEST_CURRENCY).test()
 
-        testSubscriber.assertCompleted().assertValue(rateList)
+        testObserver.assertComplete().assertValue(rateList)
         verify(dataSource).getRates(TEST_CURRENCY)
     }
 
@@ -43,9 +43,9 @@ class RatesRepositoryTest {
     fun getRates_returnError_whenDataSourceReturnError() {
         whenever(dataSource.getRates(TEST_CURRENCY)).thenReturn(Single.error(RuntimeException()))
 
-        val testSubscriber = repository.getRates(TEST_CURRENCY).test()
+        val testObserver = repository.getRates(TEST_CURRENCY).test()
 
-        testSubscriber.assertNotCompleted().assertError(RuntimeException::class.java)
+        testObserver.assertNotComplete().assertError(RuntimeException::class.java)
         verify(dataSource).getRates(TEST_CURRENCY)
     }
 }

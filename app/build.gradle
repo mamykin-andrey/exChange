@@ -7,8 +7,8 @@ def appCompatVersion = '1.0.0-rc01'
 def constraintLayoutVersion = '1.1.2'
 def toothpickVersion = '1.1.3'
 def roomVersion = '1.1.1'
-def rxAndroidVersion = '1.2.1'
-def rxJavaVersion = '1.3.0'
+def rxAndroidVersion = '2.0.2'
+def rxJavaVersion = '2.2.0'
 def retrofitVersion = '2.3.0'
 def okHttpVersion = '3.8.0'
 def picassoVersion = '2.5.2'
@@ -56,8 +56,8 @@ dependencies {
     implementation "android.arch.persistence.room:runtime:$roomVersion"
     kapt "android.arch.persistence.room:compiler:$roomVersion"
 
-    implementation "io.reactivex:rxandroid:$rxAndroidVersion"
-    implementation "io.reactivex:rxjava:$rxJavaVersion"
+    implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
+    implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
 
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"

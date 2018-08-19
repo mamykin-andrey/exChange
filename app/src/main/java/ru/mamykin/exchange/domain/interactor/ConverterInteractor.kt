@@ -1,9 +1,9 @@
 package ru.mamykin.exchange.domain.interactor
 
+import io.reactivex.Observable
+import io.reactivex.schedulers.Schedulers
 import ru.mamykin.exchange.data.repository.RatesRepository
 import ru.mamykin.exchange.domain.entity.RateList
-import rx.Observable
-import rx.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 

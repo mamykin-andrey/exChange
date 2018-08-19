@@ -1,7 +1,7 @@
 package ru.mamykin.exchange.data.repository.datasource
 
+import io.reactivex.Single
 import ru.mamykin.exchange.domain.entity.RateList
-import rx.Single
 
 interface RatesDataSource {
 

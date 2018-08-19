@@ -1,8 +1,8 @@
 package ru.mamykin.exchange.data.repository
 
+import io.reactivex.Single
 import ru.mamykin.exchange.data.repository.datasource.RatesDataSource
 import ru.mamykin.exchange.domain.entity.RateList
-import rx.Single
 import javax.inject.Inject
 
 class RatesRepository @Inject constructor(

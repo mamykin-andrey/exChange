@@ -1,8 +1,8 @@
 package ru.mamykin.exchange.domain.interactor
 
 import com.nhaarman.mockito_kotlin.whenever
+import io.reactivex.Single
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mock
@@ -11,7 +11,6 @@ import ru.mamykin.exchange.TestSchedulerRule
 import ru.mamykin.exchange.data.repository.RatesRepository
 import ru.mamykin.exchange.domain.entity.Rate
 import ru.mamykin.exchange.domain.entity.RateList
-import rx.Single
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -40,7 +39,6 @@ class ConverterInteractorTest {
     }
 
     @Test
-    @Ignore
     fun getRates_return2Items_after2Seconds() {
         whenever(ratesRepository.getRates(TEST_CURRENCY))
                 .thenReturn(Single.just(rateList1), Single.just(rateList2))

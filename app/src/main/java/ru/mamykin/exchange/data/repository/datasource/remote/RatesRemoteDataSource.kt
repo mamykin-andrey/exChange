@@ -1,10 +1,10 @@
 package ru.mamykin.exchange.data.repository.datasource.remote
 
-import ru.mamykin.exchange.domain.entity.RateList
+import io.reactivex.Single
 import ru.mamykin.exchange.data.model.mapper.RateListResponseToRateListMapper
 import ru.mamykin.exchange.data.network.RatesApi
 import ru.mamykin.exchange.data.repository.datasource.RatesDataSource
-import rx.Single
+import ru.mamykin.exchange.domain.entity.RateList
 import javax.inject.Inject
 
 class RatesRemoteDataSource @Inject constructor(

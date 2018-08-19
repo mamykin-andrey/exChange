@@ -1,14 +1,11 @@
 package ru.mamykin.exchange
 
+import io.reactivex.android.plugins.RxAndroidPlugins
+import io.reactivex.plugins.RxJavaPlugins
+import io.reactivex.schedulers.TestScheduler
 import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
-import rx.Scheduler
-import rx.android.plugins.RxAndroidPlugins
-import rx.android.plugins.RxAndroidSchedulersHook
-import rx.plugins.RxJavaPlugins
-import rx.plugins.RxJavaSchedulersHook
-import rx.schedulers.TestScheduler
 
 class TestSchedulerRule : TestRule {
 
@@ -17,18 +14,15 @@ class TestSchedulerRule : TestRule {
     override fun apply(base: Statement, d: Description): Statement {
 
         return object : Statement() {
+
             override fun evaluate() {
-                RxJavaPlugins.getInstance().registerSchedulersHook(object : RxJavaSchedulersHook() {
-                    override fun getIOScheduler(): Scheduler = testScheduler
-                })
-                RxAndroidPlugins.getInstance().registerSchedulersHook(object : RxAndroidSchedulersHook() {
-                    override fun getMainThreadScheduler(): Scheduler = testScheduler
-                })
+                RxJavaPlugins.setIoSchedulerHandler { testScheduler }
+                RxAndroidPlugins.setMainThreadSchedulerHandler { testScheduler }
                 try {
                     base.evaluate()
                 } finally {
-                    RxJavaPlugins.getInstance().reset()
-                    RxAndroidPlugins.getInstance().reset()
+                    RxJavaPlugins.reset()
+                    RxAndroidPlugins.reset()
                 }
             }
         }

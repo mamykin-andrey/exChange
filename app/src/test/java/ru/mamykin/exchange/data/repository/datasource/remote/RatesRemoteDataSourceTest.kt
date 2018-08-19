@@ -3,17 +3,17 @@ package ru.mamykin.exchange.data.repository.datasource.remote
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.whenever
+import io.reactivex.Single
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import ru.mamykin.exchange.domain.entity.Rate
-import ru.mamykin.exchange.domain.entity.RateList
-import ru.mamykin.exchange.data.model.mapper.RateListResponseToRateListMapper
 import ru.mamykin.exchange.data.model.RateListResponse
+import ru.mamykin.exchange.data.model.mapper.RateListResponseToRateListMapper
 import ru.mamykin.exchange.data.network.RatesApi
 import ru.mamykin.exchange.data.repository.datasource.RatesDataSource
-import rx.Single
+import ru.mamykin.exchange.domain.entity.Rate
+import ru.mamykin.exchange.domain.entity.RateList
 import java.util.*
 
 class RatesRemoteDataSourceTest {
@@ -54,9 +54,9 @@ class RatesRemoteDataSourceTest {
         whenever(ratesApi.getRates(TEST_CURRENCY)).thenReturn(Single.just(rateListResponse))
         whenever(mapper.transform(rateListResponse)).thenReturn(rateList)
 
-        val testSubscriber = dataSource.getRates(TEST_CURRENCY).test()
+        val testObserver = dataSource.getRates(TEST_CURRENCY).test()
 
-        testSubscriber.assertCompleted().assertValue(rateList)
+        testObserver.assertComplete().assertValue(rateList)
         verify(mapper).transform(rateListResponse)
     }
 
@@ -64,9 +64,9 @@ class RatesRemoteDataSourceTest {
     fun getRates_returnError_whenApiRequestIsFailed() {
         whenever(ratesApi.getRates(TEST_CURRENCY)).thenReturn(Single.error(RuntimeException()))
 
-        val testSubscriber = dataSource.getRates(TEST_CURRENCY).test()
+        val testObserver = dataSource.getRates(TEST_CURRENCY).test()
 
-        testSubscriber.assertNotCompleted().assertError(RuntimeException::class.java)
+        testObserver.assertNotComplete().assertError(RuntimeException::class.java)
         verifyNoMoreInteractions(mapper)
     }
 }
