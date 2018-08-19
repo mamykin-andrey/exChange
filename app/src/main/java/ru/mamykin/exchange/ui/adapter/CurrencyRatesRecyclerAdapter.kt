@@ -9,7 +9,9 @@ import ru.mamykin.exchange.domain.entity.Rate
 import ru.mamykin.exchange.ui.adapter.diffutil.CurrencyRatesDiffUtilCallback
 import ru.mamykin.exchange.ui.viewholder.CurrencyRateViewHolder
 
-class CurrencyRatesRecyclerAdapter : RecyclerView.Adapter<CurrencyRateViewHolder>() {
+class CurrencyRatesRecyclerAdapter(
+        private val currencySelectedFunc: (String) -> Unit
+) : RecyclerView.Adapter<CurrencyRateViewHolder>() {
 
     private var rates: List<Rate> = listOf()
 
@@ -21,8 +23,9 @@ class CurrencyRatesRecyclerAdapter : RecyclerView.Adapter<CurrencyRateViewHolder
 
     override fun getItemCount(): Int = rates.count()
 
-    override fun onBindViewHolder(holder: CurrencyRateViewHolder, position: Int) =
-            holder.bind(rates[position])
+    override fun onBindViewHolder(holder: CurrencyRateViewHolder, position: Int) {
+        holder.bind(rates[position], currencySelectedFunc)
+    }
 
     fun changeCurrencyRates(newRates: List<Rate>) {
         this.rates = newRates

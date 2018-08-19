@@ -1,6 +1,7 @@
 package ru.mamykin.exchange.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
+import io.reactivex.disposables.Disposable
 import ru.mamykin.exchange.core.mvp.BasePresenter
 import ru.mamykin.exchange.domain.interactor.ConverterInteractor
 import ru.mamykin.exchange.presentation.scheduler.SchedulersProvider
@@ -13,12 +14,25 @@ class ConverterPresenter @Inject constructor(
         private val schedulersProvider: SchedulersProvider
 ) : BasePresenter<ConverterView>() {
 
+    private var getRatesDisposable: Disposable? = null
+
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        interactor.getRates("RUB")
+        loadRates("RUB")
+    }
+
+    fun onCurrencySelected(currency: String) = loadRates(currency)
+
+    private fun loadRates(currency: String) {
+        getRatesDisposable?.dispose()
+        getRatesDisposable = interactor.getRates(currency)
                 .subscribeOn(schedulersProvider.io())
                 .observeOn(schedulersProvider.mainThread())
                 .subscribe({ viewState.showRateList(it) }, { viewState.showLoadingError() })
-                .unsubscribeOnDestroy()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        getRatesDisposable?.dispose()
     }
 }

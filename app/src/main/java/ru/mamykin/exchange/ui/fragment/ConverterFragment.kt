@@ -26,7 +26,7 @@ class ConverterFragment : BaseFragment(), ConverterView {
     @InjectPresenter
     lateinit var presenter: ConverterPresenter
 
-    private val adapter = CurrencyRatesRecyclerAdapter()
+    private lateinit var adapter: CurrencyRatesRecyclerAdapter
 
     @ProvidePresenter
     fun provideConverterPresenter(): ConverterPresenter {
@@ -36,7 +36,9 @@ class ConverterFragment : BaseFragment(), ConverterView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        adapter = CurrencyRatesRecyclerAdapter(presenter::onCurrencySelected)
         ratesRecyclerView.adapter = adapter
+        ratesRecyclerView.itemAnimator = null
     }
 
     override fun onFinish() {
