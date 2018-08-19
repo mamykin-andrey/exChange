@@ -1,6 +1,7 @@
 package ru.mamykin.exchange.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
+import ru.mamykin.exchange.core.extension.ioToMainThreadSchedulers
 import ru.mamykin.exchange.core.mvp.BasePresenter
 import ru.mamykin.exchange.domain.interactor.ConverterInteractor
 import ru.mamykin.exchange.presentation.view.ConverterView
@@ -13,5 +14,9 @@ class ConverterPresenter @Inject constructor(
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
+        interactor.getRates("RUB")
+                .ioToMainThreadSchedulers()
+                .subscribe({}, {})
+                .unsubscribeOnDestroy()
     }
 }

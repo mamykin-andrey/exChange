@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="ru.mamykin.exchange">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".ConverterApp"
         android:allowBackup="false"
