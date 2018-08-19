@@ -5,6 +5,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import ru.mamykin.exchange.R
 import ru.mamykin.exchange.core.di.Scopes
 import ru.mamykin.exchange.core.platform.BaseFragment
+import ru.mamykin.exchange.domain.entity.RateList
 import ru.mamykin.exchange.presentation.presenter.ConverterPresenter
 import ru.mamykin.exchange.presentation.view.ConverterView
 import toothpick.Toothpick
@@ -29,5 +30,13 @@ class ConverterFragment : BaseFragment(), ConverterView {
     override fun onFinish() {
         super.onFinish()
         Toothpick.closeScope(this)
+    }
+
+    override fun showRateList(rateList: RateList) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun showLoadingError() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
