@@ -10,7 +10,7 @@ import ru.mamykin.exchange.ui.adapter.diffutil.CurrencyRatesDiffUtilCallback
 import ru.mamykin.exchange.ui.viewholder.CurrencyRateViewHolder
 
 class CurrencyRatesRecyclerAdapter(
-        private val currencySelectedFunc: (String) -> Unit
+        private val currencySelectedFunc: (String, Float) -> Unit
 ) : RecyclerView.Adapter<CurrencyRateViewHolder>() {
 
     private var rates: List<Rate> = listOf()

@@ -36,7 +36,7 @@ class ConverterFragment : BaseFragment(), ConverterView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = CurrencyRatesRecyclerAdapter(presenter::onCurrencySelected)
+        adapter = CurrencyRatesRecyclerAdapter(presenter::onCurrencyOrAmountChanged)
         ratesRecyclerView.adapter = adapter
         ratesRecyclerView.itemAnimator = null
     }

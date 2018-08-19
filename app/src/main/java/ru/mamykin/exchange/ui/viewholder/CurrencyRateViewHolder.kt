@@ -3,18 +3,23 @@ package ru.mamykin.exchange.ui.viewholder
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_currency_rate.view.*
+import ru.mamykin.exchange.core.extension.addOnTextChangedListener
+import ru.mamykin.exchange.core.extension.setOnGetFocusListener
 import ru.mamykin.exchange.domain.entity.Rate
 
 class CurrencyRateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    fun bind(rate: Rate, currencySelectedFunc: (String) -> Unit) {
+    fun bind(rate: Rate, currencyOrAmountChangedFunc: (String, Float) -> Unit) {
         itemView.currencyCodeTextView!!.text = rate.code
         itemView.currencyNameTextView!!.text = rate.code
         itemView.exchangeAmountEditText!!.setText(rate.amount.toString())
 
-        itemView.exchangeAmountEditText.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                currencySelectedFunc(rate.code)
+        itemView.exchangeAmountEditText.apply {
+            setOnGetFocusListener {
+                currencyOrAmountChangedFunc(rate.code, text.toString().toFloat())
+            }
+            addOnTextChangedListener {
+                currencyOrAmountChangedFunc(rate.code, text.toString().toFloat())
             }
         }
     }
