@@ -12,6 +12,7 @@ def rxJavaVersion = '2.2.0'
 def retrofitVersion = '2.3.0'
 def okHttpVersion = '3.8.0'
 def picassoVersion = '2.5.2'
+def circularImageViewVersion = '3.2.0'
 def moxyVersion = '1.5.3'
 def junitVersion = '4.12'
 def mockitoCoreVersion = '2.13.0'
@@ -64,6 +65,8 @@ dependencies {
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
     implementation "com.squareup.okhttp3:logging-interceptor:$okHttpVersion"
     implementation "com.squareup.picasso:picasso:$picassoVersion"
+
+    implementation "com.mikhaellopez:circularimageview:$circularImageViewVersion"
 
     implementation "com.arello-mobile:moxy:$moxyVersion"
     implementation "com.arello-mobile:moxy-app-compat:$moxyVersion"
