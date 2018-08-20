@@ -3,9 +3,6 @@ package ru.mamykin.exchange.presentation.presenter
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
-import io.reactivex.android.plugins.RxAndroidPlugins
-import io.reactivex.plugins.RxJavaPlugins
-import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -20,7 +17,7 @@ import java.util.*
 class ConverterPresenterTest {
 
     companion object {
-        const val TEST_CURRENCY = "RUB"
+        const val RUB_CURRENCY = "RUB"
     }
 
     @Mock
@@ -41,30 +38,36 @@ class ConverterPresenterTest {
         presenter.setViewState(viewState)
     }
 
-    @After
-    fun tearDown() {
-        RxJavaPlugins.reset()
-        RxAndroidPlugins.reset()
-    }
-
     @Test
     fun onFirstViewAttach_showRateList_whenInteractorReturnsRateList() {
-        val rateList = RateList(TEST_CURRENCY, Date(), listOf())
-        whenever(interactor.getRates(TEST_CURRENCY)).thenReturn(Observable.just(rateList))
+        val rateList = RateList(RUB_CURRENCY, Date(), listOf())
+        whenever(interactor.getRates(RUB_CURRENCY, 1f)).thenReturn(Observable.just(rateList))
 
         presenter.attachView(view)
 
-        verify(interactor).getRates(TEST_CURRENCY)
+        verify(interactor).getRates(RUB_CURRENCY, 1f)
         verify(viewState).showRateList(rateList)
     }
 
     @Test
     fun onFirstViewAttach_showLoadingError_whenInteractorReturnsError() {
-        whenever(interactor.getRates(TEST_CURRENCY)).thenReturn(Observable.error(RuntimeException()))
+        whenever(interactor.getRates(RUB_CURRENCY, 1f)).thenReturn(Observable.error(RuntimeException()))
 
         presenter.attachView(view)
 
-        verify(interactor).getRates(TEST_CURRENCY)
+        verify(interactor).getRates(RUB_CURRENCY, 1f)
         verify(viewState).showLoadingError()
+    }
+
+    @Test
+    fun onCurrencyOrAmountChanged_loadRateList() {
+        val newCurrencyCode = "EUR"
+        val newCurrencyAmount = 1.0f
+        whenever(interactor.getRates(newCurrencyCode, newCurrencyAmount))
+                .thenReturn(Observable.just(RateList(newCurrencyCode, Date(), listOf())))
+
+        presenter.onCurrencyOrAmountChanged(newCurrencyCode, newCurrencyAmount)
+
+        verify(interactor).getRates(newCurrencyCode, newCurrencyAmount)
     }
 }

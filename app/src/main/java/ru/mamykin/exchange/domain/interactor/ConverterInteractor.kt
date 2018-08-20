@@ -14,8 +14,15 @@ class ConverterInteractor @Inject constructor(
     fun getRates(currencyCode: String, amount: Float): Observable<RateList> {
         return Observable.interval(1, TimeUnit.SECONDS, Schedulers.io())
                 .flatMapSingle { ratesRepository.getRates(currencyCode) }
+                .map { calculateExchangeRate(it, amount) }
                 .map { addCurrentRateToTopOfList(it, currencyCode, amount) }
                 .retry()
+    }
+
+    private fun calculateExchangeRate(original: RateList, sourceAmount: Float): RateList {
+        return RateList(original.base, original.date, original.rates.map {
+            Rate(it.code, sourceAmount * it.amount)
+        })
     }
 
     private fun addCurrentRateToTopOfList(original: RateList,

@@ -21,6 +21,11 @@ class ConverterPresenter @Inject constructor(
         loadRates("RUB", 1.0f)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        getRatesDisposable?.dispose()
+    }
+
     fun onCurrencyOrAmountChanged(currencyCode: String, amount: Float) {
         loadRates(currencyCode, amount)
     }
@@ -31,10 +36,5 @@ class ConverterPresenter @Inject constructor(
                 .subscribeOn(schedulersProvider.io())
                 .observeOn(schedulersProvider.mainThread())
                 .subscribe({ viewState.showRateList(it) }, { viewState.showLoadingError() })
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        getRatesDisposable?.dispose()
     }
 }
