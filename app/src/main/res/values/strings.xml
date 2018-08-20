@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">exChange</string>
     <string name="desc_currency_icon">Currency icon</string>
+    <string name="zero_amount" translatable="false">0</string>
 </resources>

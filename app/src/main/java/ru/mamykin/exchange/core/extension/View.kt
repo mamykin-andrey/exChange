@@ -30,3 +30,11 @@ fun EditText.setOnGetFocusListener(callback: () -> Unit) {
         }
     }
 }
+
+fun Editable.toFloat(): Float {
+    return try {
+        this.toString().toFloat()
+    } catch (e: NumberFormatException) {
+        0f
+    }
+}

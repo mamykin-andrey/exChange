@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_currency_rate.view.*
 import ru.mamykin.exchange.core.extension.addOnTextChangedListener
 import ru.mamykin.exchange.core.extension.setOnGetFocusListener
+import ru.mamykin.exchange.core.extension.toFloat
 import ru.mamykin.exchange.domain.entity.Rate
 
 class CurrencyRateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -12,15 +13,13 @@ class CurrencyRateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     fun bind(rate: Rate, currencyOrAmountChangedFunc: (String, Float) -> Unit) {
         itemView.currencyCodeTextView!!.text = rate.code
         itemView.currencyNameTextView!!.text = rate.code
-        itemView.exchangeAmountEditText!!.setText(rate.getDisplayAmount().toString())
 
         itemView.exchangeAmountEditText.apply {
-            setOnGetFocusListener {
-                currencyOrAmountChangedFunc(rate.code, text.toString().toFloat())
+            if (!isFocused) {
+                setText(rate.getDisplayAmount())
             }
-            addOnTextChangedListener {
-                currencyOrAmountChangedFunc(rate.code, text.toString().toFloat())
-            }
+            setOnGetFocusListener { currencyOrAmountChangedFunc(rate.code, text.toFloat()) }
+            addOnTextChangedListener { currencyOrAmountChangedFunc(rate.code, text.toFloat()) }
         }
     }
 }
