@@ -26,6 +26,7 @@
             app:tabIndicatorColor="@color/textSecondaryColor"
             app:tabMaxWidth="0dp"
             app:tabSelectedTextColor="@color/textPrimaryColor"
+            app:tabTextAppearance="@style/TabLayoutCaseSensitiveTitles"
             app:tabTextColor="@null" />
 
     </com.google.android.material.appbar.AppBarLayout>

@@ -25,16 +25,17 @@ class MainFragment : BaseFragment() {
     private fun setupToolbar() {
         val activity = activity!! as AppCompatActivity
         activity.setSupportActionBar(toolbar)
-        activity.supportActionBar!!.title = "Rates & conversions"
+        activity.supportActionBar!!.title = getString(R.string.rates_and_conversions_title)
         activity.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         activity.supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_close)
+        toolbar.setNavigationOnClickListener { activity.finish() }
     }
 
     private fun setupViewPager() {
         val adapter = MainViewPagerAdapter(fragmentManager!!)
-        adapter.addItem(RatesFragment.newInstance(), "Rates")
-        adapter.addItem(ConverterFragment.newInstance(), "Converter")
-        adapter.addItem(AlertsFragment.newInstance(), "Alerts")
+        adapter.addItem(RatesFragment.newInstance(), getString(R.string.rates_tab_title))
+        adapter.addItem(ConverterFragment.newInstance(), getString(R.string.converter_tab_title))
+        adapter.addItem(AlertsFragment.newInstance(), getString(R.string.alerts_tab_title))
         viewpager.adapter = adapter
         tabLayout.setupWithViewPager(viewpager)
     }

@@ -41,9 +41,7 @@ class ConverterFragment : BaseFragment(), ConverterView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = CurrencyRatesRecyclerAdapter(presenter::onCurrencyOrAmountChanged)
-        ratesRecyclerView.adapter = adapter
-        ratesRecyclerView.itemAnimator = null
+        initRatesAdapter()
     }
 
     override fun onFinish() {
@@ -65,5 +63,11 @@ class ConverterFragment : BaseFragment(), ConverterView {
 
     override fun showLoadingError() {
         Toast.makeText(context, "Error was occured", Toast.LENGTH_LONG).show()
+    }
+
+    private fun initRatesAdapter() {
+        adapter = CurrencyRatesRecyclerAdapter(presenter::onCurrencyOrAmountChanged)
+        ratesRecyclerView.adapter = adapter
+        ratesRecyclerView.itemAnimator = null
     }
 }
