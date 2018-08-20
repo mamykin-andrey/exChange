@@ -28,6 +28,7 @@ class ConverterPresenter @Inject constructor(
 
     fun onCurrencyOrAmountChanged(currencyCode: String, amount: Float) {
         loadRates(currencyCode, amount)
+        viewState.showLoading(true)
     }
 
     private fun loadRates(currency: String, amount: Float) {
@@ -35,6 +36,7 @@ class ConverterPresenter @Inject constructor(
         getRatesDisposable = interactor.getRates(currency, amount)
                 .subscribeOn(schedulersProvider.io())
                 .observeOn(schedulersProvider.mainThread())
+                .doOnNext { viewState.showLoading(false) }
                 .subscribe({ viewState.showRateList(it) }, { viewState.showLoadingError() })
     }
 }
