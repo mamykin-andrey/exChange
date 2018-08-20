@@ -66,7 +66,7 @@ class ConverterFragment : BaseFragment(), ConverterView {
     }
 
     private fun initRatesAdapter() {
-        adapter = CurrencyRatesRecyclerAdapter(presenter::onCurrencyOrAmountChanged)
+        adapter = CurrencyRatesRecyclerAdapter(context!!, presenter::onCurrencyOrAmountChanged)
         ratesRecyclerView.adapter = adapter
         ratesRecyclerView.itemAnimator = null
     }

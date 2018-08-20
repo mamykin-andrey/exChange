@@ -1,5 +1,6 @@
 package ru.mamykin.exchange.ui.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -10,6 +11,7 @@ import ru.mamykin.exchange.ui.adapter.diffutil.CurrencyRatesDiffUtilCallback
 import ru.mamykin.exchange.ui.viewholder.CurrencyRateViewHolder
 
 class CurrencyRatesRecyclerAdapter(
+        private val context: Context,
         private val currencySelectedFunc: (String, Float) -> Unit
 ) : RecyclerView.Adapter<CurrencyRateViewHolder>() {
 
@@ -18,7 +20,7 @@ class CurrencyRatesRecyclerAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CurrencyRateViewHolder {
         val itemView = LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_currency_rate, parent, false)
-        return CurrencyRateViewHolder(itemView)
+        return CurrencyRateViewHolder(context, itemView)
     }
 
     override fun getItemCount(): Int = rates.count()

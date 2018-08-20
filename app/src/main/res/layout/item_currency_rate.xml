@@ -1,19 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?selectableItemBackground">
+    android:background="?selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:padding="12dp">
 
     <com.mikhaellopez.circularimageview.CircularImageView
         android:id="@+id/currencyIconImageView"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_margin="8dp"
         android:contentDescription="@string/desc_currency_icon"
         android:scaleType="centerCrop"
+        app:civ_border_color="@android:color/darker_gray"
+        app:civ_border_width="1px"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@drawable/ic_test_currency_icon" />
 
@@ -21,9 +27,10 @@
         android:id="@+id/currencyCodeTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
         android:textColor="@color/textPrimaryColor"
+        android:textSize="16sp"
         app:fontFamily="sans-serif-medium"
         app:layout_constraintLeft_toRightOf="@id/currencyIconImageView"
         app:layout_constraintRight_toLeftOf="@id/exchangeAmountEditText"
@@ -34,8 +41,9 @@
         android:id="@+id/currencyNameTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="2dp"
         android:textColor="@color/textSecondaryColor"
         app:layout_constraintLeft_toRightOf="@id/currencyIconImageView"
         app:layout_constraintRight_toLeftOf="@id/exchangeAmountEditText"
