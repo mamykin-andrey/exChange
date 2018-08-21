@@ -11,6 +11,10 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="AppTheme.Splash" parent="AppTheme.NoActionBar">
+        <item name="android:windowBackground">@drawable/bg_splash</item>
+    </style>
+
     <style name="TabLayoutCaseSensitiveTitles" parent="TextAppearance.Design.Tab">
         <item name="textAllCaps">false</item>
         <item name="android:textAllCaps">false</item>
