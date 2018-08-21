@@ -39,6 +39,11 @@ class ConverterFragment : BaseFragment(), ConverterView {
                 .getInstance(ConverterPresenter::class.java)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        lifecycle.addObserver(presenter)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRatesAdapter()

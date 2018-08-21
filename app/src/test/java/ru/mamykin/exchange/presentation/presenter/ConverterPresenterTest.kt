@@ -1,7 +1,6 @@
 package ru.mamykin.exchange.presentation.presenter
 
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockito_kotlin.*
 import io.reactivex.Observable
 import org.junit.Before
 import org.junit.Test
@@ -39,7 +38,7 @@ class ConverterPresenterTest {
     }
 
     @Test
-    fun onFirstViewAttach_showRateList_whenInteractorReturnsRateList() {
+    fun onFirstViewAttach_shouldShowRateList_whenInteractorReturnsRateList() {
         val rateList = RateList(RUB_CURRENCY, Date(), listOf())
         whenever(interactor.getRates(RUB_CURRENCY, 1f)).thenReturn(Observable.just(rateList))
 
@@ -50,7 +49,7 @@ class ConverterPresenterTest {
     }
 
     @Test
-    fun onFirstViewAttach_showLoadingError_whenInteractorReturnsError() {
+    fun onFirstViewAttach_shouldShowLoadingError_whenInteractorReturnsError() {
         whenever(interactor.getRates(RUB_CURRENCY, 1f)).thenReturn(Observable.error(RuntimeException()))
 
         presenter.attachView(view)
@@ -60,7 +59,7 @@ class ConverterPresenterTest {
     }
 
     @Test
-    fun onCurrencyOrAmountChanged_loadRateList() {
+    fun onCurrencyOrAmountChanged_shouldLoadRateList() {
         val newCurrencyCode = "EUR"
         val newCurrencyAmount = 1.0f
         whenever(interactor.getRates(newCurrencyCode, newCurrencyAmount))
@@ -69,5 +68,30 @@ class ConverterPresenterTest {
         presenter.onCurrencyOrAmountChanged(newCurrencyCode, newCurrencyAmount)
 
         verify(interactor).getRates(newCurrencyCode, newCurrencyAmount)
+    }
+
+    @Test
+    fun onViewStop_shouldStopRatesUpdates() {
+        whenever(interactor.getRates(any(), any()))
+                .thenReturn(Observable.just(RateList("RUB", Date(), listOf())))
+
+        presenter.attachView(view)
+        verify(interactor).getRates(any(), any())
+
+        presenter.onViewStop()
+        verifyNoMoreInteractions(interactor)
+    }
+
+    @Test
+    fun onViewStart_shouldStartRatesUpdates_whenViewIsFromStopState() {
+        whenever(interactor.getRates(any(), any()))
+                .thenReturn(Observable.just(RateList("RUB", Date(), listOf())))
+
+        presenter.attachView(view)
+        verify(interactor).getRates(any(), any())
+
+        presenter.onViewStop()
+        presenter.onViewStart()
+        verify(interactor, times(2)).getRates(any(), any())
     }
 }
