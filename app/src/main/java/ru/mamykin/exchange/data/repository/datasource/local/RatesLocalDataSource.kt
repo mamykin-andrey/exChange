@@ -13,16 +13,33 @@ class RatesLocalDataSource @Inject constructor(
         private val mapper: RateListToRateListDbEntityMapper
 ) : RatesDataSource {
 
+    companion object {
+        private const val ONE_MINUTE_IN_MILLIS = 60 * 1000
+    }
+
+    private var lastCacheTime: Long = 0
+
     override fun getRates(baseCurrency: String): Maybe<RateList> {
         return if (ratesDao.rowsCount() > 0)
-            Maybe.just(mapper.reverse(getRates()))
+            Maybe.just(mapper.reverseRateList(getRates()))
         else
             Maybe.empty()
     }
 
     override fun cacheRates(rateList: RateList) {
-        ratesDao.insert(mapper.transform(rateList))
+        val timeNow = System.currentTimeMillis()
+        if (isCacheExpired(timeNow)) {
+            lastCacheTime = timeNow
+
+            ratesDao.clearRates()
+            ratesDao.clearRateList()
+            ratesDao.insertRates(mapper.transformRates(rateList.rates))
+            ratesDao.insertRateList(mapper.transformRateList(rateList))
+        }
     }
+
+    private fun isCacheExpired(timeNow: Long): Boolean =
+            (timeNow - lastCacheTime) >= ONE_MINUTE_IN_MILLIS
 
     private fun getRates(): RateListDbEntity {
         val rates = ratesDao.getRates()

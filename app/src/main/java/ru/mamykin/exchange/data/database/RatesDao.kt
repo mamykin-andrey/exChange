@@ -1,6 +1,8 @@
 package ru.mamykin.exchange.data.database
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.Query
 import ru.mamykin.exchange.data.database.model.RateDbEntity
 import ru.mamykin.exchange.data.database.model.RateListDbEntity
 
@@ -8,16 +10,10 @@ import ru.mamykin.exchange.data.database.model.RateListDbEntity
 interface RatesDao {
 
     @Insert
-    fun insert(rateList: RateListDbEntity)
+    fun insertRateList(rateList: RateListDbEntity)
 
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun update(rateList: RateListDbEntity): Int
-
-    @Delete
-    fun delete(rateList: RateListDbEntity)
-
-    @Query("DELETE FROM ratelistdbentity")
-    fun clearAll()
+    @Insert
+    fun insertRates(rates: List<RateDbEntity>)
 
     @Query("SELECT * FROM ratelistdbentity LIMIT 1")
     fun getRateList(): RateListDbEntity
@@ -28,4 +24,10 @@ interface RatesDao {
 
     @Query("SELECT COUNT(*) FROM ratelistdbentity")
     fun rowsCount(): Int
+
+    @Query("DELETE FROM ratelistdbentity")
+    fun clearRateList()
+
+    @Query("DELETE FROM ratedbentity")
+    fun clearRates()
 }

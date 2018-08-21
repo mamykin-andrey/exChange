@@ -8,19 +8,19 @@ import javax.inject.Inject
 
 class RateListToRateListDbEntityMapper @Inject constructor() {
 
-    fun transform(rateList: RateList): RateListDbEntity = RateListDbEntity().apply {
+    fun transformRateList(rateList: RateList): RateListDbEntity = RateListDbEntity().apply {
         base = rateList.base
         date = rateList.date
-        rates = ratesToRatesDbEntities(rateList.rates)
+        rates = transformRates(rateList.rates)
     }
 
-    fun reverse(dbEntity: RateListDbEntity): RateList = RateList(
+    fun reverseRateList(dbEntity: RateListDbEntity): RateList = RateList(
             dbEntity.base,
             dbEntity.date,
-            ratesDbEntitiesToRates(dbEntity.rates)
+            reverseRates(dbEntity.rates)
     )
 
-    private fun ratesToRatesDbEntities(rates: List<Rate>): List<RateDbEntity> {
+    fun transformRates(rates: List<Rate>): List<RateDbEntity> {
         return rates.map {
             RateDbEntity().apply {
                 code = it.code
@@ -29,7 +29,7 @@ class RateListToRateListDbEntityMapper @Inject constructor() {
         }
     }
 
-    private fun ratesDbEntitiesToRates(dbEntities: List<RateDbEntity>): List<Rate> {
+    fun reverseRates(dbEntities: List<RateDbEntity>): List<Rate> {
         return dbEntities.map {
             Rate(it.code, it.amount)
         }
