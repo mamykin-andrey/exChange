@@ -1,10 +1,10 @@
-package ru.mamykin.exchange.data.model.mapper
+package ru.mamykin.exchange.data.network.model.mapper
 
 import org.hamcrest.core.Is.`is`
 import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Test
-import ru.mamykin.exchange.data.model.RateListResponse
+import ru.mamykin.exchange.data.network.model.RateListResponse
 import ru.mamykin.exchange.domain.entity.Rate
 import ru.mamykin.exchange.domain.entity.RateList
 import java.util.*

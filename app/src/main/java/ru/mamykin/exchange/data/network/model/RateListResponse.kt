@@ -1,4 +1,4 @@
-package ru.mamykin.exchange.data.model
+package ru.mamykin.exchange.data.network.model
 
 import com.google.gson.annotations.SerializedName
 import java.util.*
