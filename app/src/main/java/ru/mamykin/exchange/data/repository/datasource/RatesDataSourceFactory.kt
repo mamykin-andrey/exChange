@@ -15,7 +15,7 @@ class RatesDataSourceFactory @Inject constructor(
     fun create(type: DataSourceType? = null) = when (type) {
         DataSourceType.Local -> localDataSource
         DataSourceType.Remote -> remoteDataSource
-        else -> if (isFirstRequest) localDataSource else remoteDataSource
+        else -> if (isFirstRequest) localDataSource.also { isFirstRequest = false } else remoteDataSource
     }
 
     sealed class DataSourceType {

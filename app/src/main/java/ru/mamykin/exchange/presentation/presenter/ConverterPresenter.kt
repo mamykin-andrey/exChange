@@ -33,10 +33,14 @@ class ConverterPresenter @Inject constructor(
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-    fun onViewStart() = loadRates(currentCurrencyRate.code, currentCurrencyRate.amount)
+    fun onViewStart() {
+        loadRates(currentCurrencyRate.code, currentCurrencyRate.amount)
+    }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    fun onViewStop() = getRatesDisposable?.dispose()
+    fun onViewStop() {
+        getRatesDisposable?.dispose()
+    }
 
     fun onCurrencyOrAmountChanged(currencyCode: String, amount: Float) {
         val newCurrencyRate = Rate(currencyCode, amount)
