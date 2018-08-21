@@ -11,6 +11,8 @@ import ru.mamykin.exchange.ui.adapter.MainViewPagerAdapter
 class MainFragment : BaseFragment() {
 
     companion object {
+        private const val CONVERTER_POSITION = 1
+
         fun newInstance() = MainFragment()
     }
 
@@ -37,6 +39,7 @@ class MainFragment : BaseFragment() {
         adapter.addItem(ConverterFragment.newInstance(), getString(R.string.converter_tab_title))
         adapter.addItem(AlertsFragment.newInstance(), getString(R.string.alerts_tab_title))
         viewpager.adapter = adapter
+        viewpager.currentItem = CONVERTER_POSITION
         tabLayout.setupWithViewPager(viewpager)
     }
 }
