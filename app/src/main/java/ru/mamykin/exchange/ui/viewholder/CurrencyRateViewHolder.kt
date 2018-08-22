@@ -50,9 +50,8 @@ class CurrencyRateViewHolder(private val context: Context,
             setOnGetFocusListener { currencyOrAmountChangedFunc(rate.code, text.toFloat()) }
             textChangedEvents()
                     .subscribeOn(Schedulers.io())
-                    .filter { it.isNotBlank() }
+                    .filter(String::isNotBlank)
                     .debounce(500, TimeUnit.MILLISECONDS)
-                    .distinctUntilChanged()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe { currencyOrAmountChangedFunc(rate.code, it.toFloat()) }
         }

@@ -1,4 +1,4 @@
-package ru.mamykin.exchange.domain.interactor
+package ru.mamykin.exchange.presentation.presenter
 
 import com.nhaarman.mockito_kotlin.verify
 import org.junit.Before

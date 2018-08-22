@@ -1,7 +1,7 @@
 package ru.mamykin.exchange.domain.interactor
 
 import io.reactivex.Observable
-import io.reactivex.schedulers.Schedulers
+import ru.mamykin.exchange.core.scheduler.SchedulersProvider
 import ru.mamykin.exchange.data.repository.RatesRepository
 import ru.mamykin.exchange.domain.entity.Rate
 import ru.mamykin.exchange.domain.entity.RateList
@@ -9,13 +9,19 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class ConverterInteractor @Inject constructor(
-        private val ratesRepository: RatesRepository
+        private val ratesRepository: RatesRepository,
+        private val schedulersProvider: SchedulersProvider
 ) {
-    fun getRates(currencyCode: String, amount: Float): Observable<RateList> {
-        return Observable.interval(0, 1, TimeUnit.SECONDS, Schedulers.io())
-                .flatMapSingle { ratesRepository.getRates(currencyCode) }
-                .map { calculateExchangeRate(it, amount) }
-                .map { addCurrentRateToTopOfList(it, currencyCode, amount) }
+    private var currentCurrency: String = ""
+    private var currentAmount: Float = 0f
+
+    fun getRates(currency: String?, amount: Float?): Observable<RateList> {
+        currency?.let { currentCurrency = currency }
+        amount?.let { currentAmount = amount }
+        return Observable.interval(0, 1, TimeUnit.SECONDS, schedulersProvider.io())
+                .flatMapSingle { ratesRepository.getRates(currentCurrency) }
+                .map { calculateExchangeRate(it, currentAmount) }
+                .map { addCurrentRateToTopOfList(it, currentCurrency, currentAmount) }
                 .retry()
     }
 
