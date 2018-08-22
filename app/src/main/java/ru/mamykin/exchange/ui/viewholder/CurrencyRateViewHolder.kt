@@ -8,7 +8,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.item_currency_rate.view.*
 import ru.mamykin.exchange.R
-import ru.mamykin.exchange.core.extension.setOnGetFocusListener
 import ru.mamykin.exchange.core.extension.textChangedEvents
 import ru.mamykin.exchange.core.extension.toFloat
 import ru.mamykin.exchange.core.platform.UiUtils
@@ -27,11 +26,16 @@ class CurrencyRateViewHolder(
         private const val DEFAULT_NAME = R.string.currency_name_unknown
     }
 
+    private var prevCurrencyCode: String = ""
+
     fun bind(rate: Rate, currencyOrAmountChangedFunc: (String, Float) -> Unit) {
-        bindCurrencyTitle(rate.code)
-        bindCurrencySubtitle(rate.code)
+        if (rate.code != prevCurrencyCode) {
+            prevCurrencyCode = rate.code
+            bindCurrencyTitle(rate.code)
+            bindCurrencySubtitle(rate.code)
+            bindCurrencyIcon(rate.code)
+        }
         bindAmountInput(rate, currencyOrAmountChangedFunc)
-        bindCurrencyIcon(rate.code)
     }
 
     private fun bindCurrencyTitle(currencyCode: String) {
@@ -53,11 +57,15 @@ class CurrencyRateViewHolder(
             if (!isFocused) {
                 setText(rate.getDisplayAmount())
             }
-            setOnGetFocusListener { currencyOrAmountChangedFunc(rate.code, text.toFloat()) }
+            setOnTouchListener { _, _ ->
+                currencyOrAmountChangedFunc(rate.code, text.toFloat())
+                return@setOnTouchListener true
+            }
             textChangedEvents()
                     .subscribeOn(Schedulers.io())
                     .filter(String::isNotBlank)
                     .debounce(500, TimeUnit.MILLISECONDS)
+                    .distinctUntilChanged()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe { currencyOrAmountChangedFunc(rate.code, it.toFloat()) }
         }

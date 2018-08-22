@@ -11,17 +11,4 @@ data class Rate(
                 .setScale(2, BigDecimal.ROUND_HALF_UP)
                 .toString()
     }
-
-    override fun equals(other: Any?): Boolean {
-        if (other == null || other !is Rate) {
-            return false
-        }
-        return this.code == other.code && (this.amount - other.amount) < 0.01f
-    }
-
-    override fun hashCode(): Int {
-        var result = code.hashCode()
-        result = 31 * result + amount.hashCode()
-        return result
-    }
 }

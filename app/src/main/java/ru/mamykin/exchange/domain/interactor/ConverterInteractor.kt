@@ -12,16 +12,11 @@ class ConverterInteractor @Inject constructor(
         private val ratesRepository: RatesRepository,
         private val schedulersProvider: SchedulersProvider
 ) {
-    private var currentCurrency: String = ""
-    private var currentAmount: Float = 0f
-
-    fun getRates(currency: String?, amount: Float?): Observable<RateList> {
-        currency?.let { currentCurrency = currency }
-        amount?.let { currentAmount = amount }
+    fun getRates(currency: String, amount: Float): Observable<RateList> {
         return Observable.interval(0, 1, TimeUnit.SECONDS, schedulersProvider.io())
-                .flatMapSingle { ratesRepository.getRates(currentCurrency) }
-                .map { calculateExchangeRate(it, currentAmount) }
-                .map { addCurrentRateToTopOfList(it, currentCurrency, currentAmount) }
+                .flatMapSingle { ratesRepository.getRates(currency) }
+                .map { calculateExchangeRate(it, amount) }
+                .map { addCurrentRateToTopOfList(it, currency, amount) }
                 .retry()
     }
 

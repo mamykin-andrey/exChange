@@ -8,6 +8,7 @@ import com.arellomobile.mvp.InjectViewState
 import io.reactivex.disposables.Disposable
 import ru.mamykin.exchange.core.mvp.BasePresenter
 import ru.mamykin.exchange.core.scheduler.SchedulersProvider
+import ru.mamykin.exchange.domain.entity.Rate
 import ru.mamykin.exchange.domain.interactor.ConverterInteractor
 import ru.mamykin.exchange.presentation.view.ConverterView
 import javax.inject.Inject
@@ -19,11 +20,12 @@ class ConverterPresenter @Inject constructor(
 ) : BasePresenter<ConverterView>(), LifecycleObserver {
 
     private var ratesDisposable: Disposable? = null
+    private var currentCurrencyRate = Rate("RUB", 1.0f)
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.showLoading(true)
-        loadRates("RUB", 1.0f)
+        loadRates(currentCurrencyRate.code, currentCurrencyRate.amount)
     }
 
     override fun onDestroy() {
@@ -33,7 +35,9 @@ class ConverterPresenter @Inject constructor(
 
     @OnLifecycleEvent(ON_RESUME)
     fun onViewStart() {
-        ratesDisposable?.isDisposed?.let { loadRates() }
+        if (ratesDisposable?.isDisposed == true) {
+            loadRates(currentCurrencyRate.code, currentCurrencyRate.amount)
+        }
     }
 
     @OnLifecycleEvent(ON_STOP)
@@ -42,11 +46,15 @@ class ConverterPresenter @Inject constructor(
     }
 
     fun onCurrencyOrAmountChanged(newCurrency: String, newAmount: Float) {
-        viewState.showLoading(true)
-        loadRates(newCurrency, newAmount)
+        val newCurrencyRate = Rate(newCurrency, newAmount)
+        if (newCurrencyRate != currentCurrencyRate) {
+            currentCurrencyRate = newCurrencyRate
+            viewState.showLoading(true)
+            loadRates(newCurrency, newAmount)
+        }
     }
 
-    private fun loadRates(currency: String? = null, amount: Float? = null) {
+    private fun loadRates(currency: String, amount: Float) {
         ratesDisposable?.dispose()
         ratesDisposable = interactor.getRates(currency, amount)
                 .subscribeOn(schedulersProvider.io())
