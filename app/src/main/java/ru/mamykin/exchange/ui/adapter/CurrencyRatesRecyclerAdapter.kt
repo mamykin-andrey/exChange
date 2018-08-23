@@ -3,11 +3,9 @@ package ru.mamykin.exchange.ui.adapter
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import ru.mamykin.exchange.R
 import ru.mamykin.exchange.domain.entity.Rate
-import ru.mamykin.exchange.ui.adapter.diffutil.CurrencyRatesDiffUtilCallback
 import ru.mamykin.exchange.ui.viewholder.CurrencyRateViewHolder
 
 class CurrencyRatesRecyclerAdapter(
@@ -29,9 +27,12 @@ class CurrencyRatesRecyclerAdapter(
         holder.bind(rates[position], currencySelectedFunc)
     }
 
+    override fun getItemId(position: Int): Long {
+        return rates[position].code.hashCode().toLong()
+    }
+
     fun changeCurrencyRates(newRates: List<Rate>) {
-        val diffResult = DiffUtil.calculateDiff(CurrencyRatesDiffUtilCallback(rates, newRates))
         this.rates = newRates
-        diffResult.dispatchUpdatesTo(this)
+        notifyDataSetChanged()
     }
 }

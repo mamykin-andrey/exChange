@@ -26,11 +26,9 @@ class CurrencyRateViewHolder(
         private const val DEFAULT_NAME = R.string.currency_name_unknown
     }
 
-    private var prevCurrencyCode: String = ""
-
     fun bind(rate: Rate, currencyOrAmountChangedFunc: (String, Float) -> Unit) {
-        if (rate.code != prevCurrencyCode) {
-            prevCurrencyCode = rate.code
+        if (rate.code != itemView.tag) {
+            itemView.tag = rate.code
             bindCurrencyTitle(rate.code)
             bindCurrencySubtitle(rate.code)
             bindCurrencyIcon(rate.code)

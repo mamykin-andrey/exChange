@@ -71,7 +71,11 @@ class ConverterFragment : BaseFragment(), ConverterView {
     }
 
     private fun initRatesAdapter() {
-        adapter = CurrencyRatesRecyclerAdapter(context!!, presenter::onCurrencyOrAmountChanged)
+        adapter = CurrencyRatesRecyclerAdapter(context!!) { code, amount ->
+            ratesRecyclerView.scrollToPosition(0)
+            presenter.onCurrencyOrAmountChanged(code, amount)
+        }
+        adapter.setHasStableIds(true)
         ratesRecyclerView.adapter = adapter
     }
 }
