@@ -2,7 +2,10 @@ package ru.mamykin.exchange
 
 import android.app.Application
 import ru.mamykin.exchange.core.di.Scopes
-import ru.mamykin.exchange.core.di.module.*
+import ru.mamykin.exchange.core.di.module.AppModule
+import ru.mamykin.exchange.core.di.module.DataSourceModule
+import ru.mamykin.exchange.core.di.module.NetworkModule
+import ru.mamykin.exchange.core.di.module.SchedulersModule
 import toothpick.Toothpick
 import toothpick.configuration.Configuration
 import toothpick.registries.FactoryRegistryLocator
@@ -28,6 +31,5 @@ class ConverterApp : Application() {
         appScope.installModules(NetworkModule())
         appScope.installModules(DataSourceModule())
         appScope.installModules(SchedulersModule())
-        appScope.installModules(DatabaseModule())
     }
 }

@@ -6,7 +6,6 @@ apply plugin: 'kotlin-kapt'
 def appCompatVersion = '1.0.0-rc01'
 def constraintLayoutVersion = '1.1.2'
 def toothpickVersion = '1.1.3'
-def roomVersion = '1.1.1'
 def rxAndroidVersion = '2.0.2'
 def rxJavaVersion = '2.2.0'
 def retrofitVersion = '2.3.0'
@@ -53,9 +52,6 @@ dependencies {
 
     implementation "com.github.stephanenicolas.toothpick:toothpick-runtime:$toothpickVersion"
     kapt "com.github.stephanenicolas.toothpick:toothpick-compiler:$toothpickVersion"
-
-    implementation "android.arch.persistence.room:runtime:$roomVersion"
-    kapt "android.arch.persistence.room:compiler:$roomVersion"
 
     implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
     implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"

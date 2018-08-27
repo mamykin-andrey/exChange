@@ -57,7 +57,7 @@ class CurrencyRateViewHolder(
             }
             setOnTouchListener { _, _ ->
                 currencyOrAmountChangedFunc(rate.code, text.toFloat())
-                return@setOnTouchListener true
+                return@setOnTouchListener false
             }
             textChangedEvents()
                     .subscribeOn(Schedulers.io())

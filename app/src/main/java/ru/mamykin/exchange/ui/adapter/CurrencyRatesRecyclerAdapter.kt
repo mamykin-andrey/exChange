@@ -31,8 +31,8 @@ class CurrencyRatesRecyclerAdapter(
         return rates[position].code.hashCode().toLong()
     }
 
-    fun changeCurrencyRates(newRates: List<Rate>) {
-        this.rates = newRates
+    fun changeCurrencyRates(rates: List<Rate>) {
+        this.rates = rates
         notifyDataSetChanged()
     }
 }
