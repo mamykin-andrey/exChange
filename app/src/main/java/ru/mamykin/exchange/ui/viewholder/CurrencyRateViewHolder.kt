@@ -8,6 +8,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.item_currency_rate.view.*
 import ru.mamykin.exchange.R
+import ru.mamykin.exchange.core.extension.onTouchEvents
 import ru.mamykin.exchange.core.extension.textChangedEvents
 import ru.mamykin.exchange.core.extension.toFloat
 import ru.mamykin.exchange.core.platform.UiUtils
@@ -55,10 +56,11 @@ class CurrencyRateViewHolder(
             if (!isFocused) {
                 setText(rate.getDisplayAmount())
             }
-            setOnTouchListener { _, _ ->
-                currencyOrAmountChangedFunc(rate.code, text.toFloat())
-                return@setOnTouchListener false
-            }
+            onTouchEvents()
+                    .subscribeOn(Schedulers.io())
+                    .debounce(300, TimeUnit.MILLISECONDS)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe { currencyOrAmountChangedFunc(rate.code, text.toFloat()) }
             textChangedEvents()
                     .subscribeOn(Schedulers.io())
                     .filter(String::isNotBlank)
@@ -76,6 +78,10 @@ class CurrencyRateViewHolder(
                 currencyCode.toLowerCase(),
                 DEFAULT_ICON
         )
-        Picasso.with(context).load(iconResId).into(itemView.currencyIconImageView)
+        Picasso.with(context)
+                .load(iconResId)
+                .resize(100, 100)
+                .centerInside()
+                .into(itemView.currencyIconImageView)
     }
 }

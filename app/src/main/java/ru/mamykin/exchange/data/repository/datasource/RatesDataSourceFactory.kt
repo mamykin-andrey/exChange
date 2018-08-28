@@ -10,13 +10,14 @@ class RatesDataSourceFactory @Inject constructor(
         @LocalDataSource
         private val localDataSource: RatesDataSource
 ) {
-    private var isFirstRequest = true
-
-    fun create(type: DataSourceType? = null) = when (type) {
-        DataSourceType.Local -> localDataSource
-        DataSourceType.Remote -> remoteDataSource
-        else -> if (isFirstRequest) localDataSource.also { isFirstRequest = false } else remoteDataSource
+    fun create(force: Boolean = false) = when (force) {
+        true -> remoteDataSource
+        false -> localDataSource
     }
+
+    fun createRemoteDataSource(): RatesDataSource = remoteDataSource
+
+    fun createLocalDataSource(): RatesDataSource = localDataSource
 
     sealed class DataSourceType {
         object Local : DataSourceType()

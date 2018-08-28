@@ -8,7 +8,6 @@ import com.arellomobile.mvp.InjectViewState
 import io.reactivex.disposables.Disposable
 import ru.mamykin.exchange.core.mvp.BasePresenter
 import ru.mamykin.exchange.core.scheduler.SchedulersProvider
-import ru.mamykin.exchange.domain.entity.Rate
 import ru.mamykin.exchange.domain.interactor.ConverterInteractor
 import ru.mamykin.exchange.presentation.view.ConverterView
 import javax.inject.Inject
@@ -20,12 +19,13 @@ class ConverterPresenter @Inject constructor(
 ) : BasePresenter<ConverterView>(), LifecycleObserver {
 
     private var ratesDisposable: Disposable? = null
-    private var currentCurrencyRate = Rate("RUB", 1.0f)
+    private var currency = "RUB"
+    private var amount = 1.0f
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.showLoading(true)
-        loadRates(currentCurrencyRate.code, currentCurrencyRate.amount)
+        loadRates(currency, amount, true)
     }
 
     override fun onDestroy() {
@@ -36,7 +36,7 @@ class ConverterPresenter @Inject constructor(
     @OnLifecycleEvent(ON_RESUME)
     fun onViewStart() {
         if (ratesDisposable?.isDisposed == true) {
-            loadRates(currentCurrencyRate.code, currentCurrencyRate.amount)
+            loadRates(currency, amount, true)
         }
     }
 
@@ -46,17 +46,20 @@ class ConverterPresenter @Inject constructor(
     }
 
     fun onCurrencyOrAmountChanged(newCurrency: String, newAmount: Float) {
-        val newCurrencyRate = Rate(newCurrency, newAmount)
-        if (newCurrencyRate != currentCurrencyRate) {
-            currentCurrencyRate = newCurrencyRate
-            viewState.showLoading(true)
-            loadRates(newCurrency, newAmount)
+        if (interactor.isCurrencyEquals(newCurrency, currency, newAmount, amount))
+            return
+
+        val currencyChanged = newCurrency != currency
+        if (currencyChanged) viewState.showLoading(true)
+        loadRates(newCurrency, newAmount, currencyChanged).also {
+            this.currency = newCurrency
+            this.amount = newAmount
         }
     }
 
-    private fun loadRates(currency: String, amount: Float) {
+    private fun loadRates(currency: String, amount: Float, force: Boolean) {
         ratesDisposable?.dispose()
-        ratesDisposable = interactor.getRates(currency, amount)
+        ratesDisposable = interactor.getRates(currency, amount, force)
                 .subscribeOn(schedulersProvider.io())
                 .observeOn(schedulersProvider.mainThread())
                 .doOnNext { viewState.showLoading(false) }

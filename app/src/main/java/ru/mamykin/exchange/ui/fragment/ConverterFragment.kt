@@ -2,6 +2,7 @@ package ru.mamykin.exchange.ui.fragment
 
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -42,6 +43,8 @@ class ConverterFragment : BaseFragment(), ConverterView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         lifecycle.addObserver(presenter)
+        activity?.window?.setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
