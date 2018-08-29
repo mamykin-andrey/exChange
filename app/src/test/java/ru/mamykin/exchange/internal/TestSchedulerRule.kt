@@ -1,4 +1,4 @@
-package ru.mamykin.exchange
+package ru.mamykin.exchange.internal
 
 import io.reactivex.android.plugins.RxAndroidPlugins
 import io.reactivex.plugins.RxJavaPlugins
