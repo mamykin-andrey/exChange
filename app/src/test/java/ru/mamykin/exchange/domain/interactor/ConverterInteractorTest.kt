@@ -12,7 +12,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import ru.mamykin.exchange.TestSchedulerRule
+import ru.mamykin.exchange.internal.TestSchedulerRule
 import ru.mamykin.exchange.core.extension.skip
 import ru.mamykin.exchange.core.rx.DefaultSchedulersProvider
 import ru.mamykin.exchange.data.repository.RatesRepository

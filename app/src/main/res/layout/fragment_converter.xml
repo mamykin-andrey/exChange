@@ -9,11 +9,13 @@
     <ProgressBar
         android:id="@+id/loadingProgressBar"
         android:layout_width="wrap_content"
+        tools:visibility="gone"
         android:layout_gravity="center"
         android:layout_height="match_parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:visibility="gone"
+        tools:visibility="visible"
         android:id="@+id/ratesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

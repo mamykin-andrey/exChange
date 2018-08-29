@@ -6,7 +6,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import ru.mamykin.exchange.TestSchedulersProvider
+import ru.mamykin.exchange.internal.TestSchedulersProvider
 import ru.mamykin.exchange.domain.entity.RateList
 import ru.mamykin.exchange.domain.interactor.ConverterInteractor
 import ru.mamykin.exchange.presentation.view.ConverterView
