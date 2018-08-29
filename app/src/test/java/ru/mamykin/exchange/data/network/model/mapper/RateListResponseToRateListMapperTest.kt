@@ -19,7 +19,7 @@ class RateListResponseToRateListMapperTest {
     }
 
     @Test
-    fun transform_returnTransformedRateList_whenRatesNotEmpty() {
+    fun transform_shouldReturnTransformedRateList_whenRatesNotEmpty() {
         val today = Date()
         val rateListResponse = RateListResponse(
                 "EUR",
@@ -38,7 +38,7 @@ class RateListResponseToRateListMapperTest {
     }
 
     @Test
-    fun transform_returnTransformedRateList_whenRatesIsEmpty() {
+    fun transform_shouldReturnTransformedRateList_whenRatesIsEmpty() {
         val today = Date()
         val rateListResponse = RateListResponse("EUR", today, mapOf())
         val expectedRateList = RateList("EUR", today, listOf())

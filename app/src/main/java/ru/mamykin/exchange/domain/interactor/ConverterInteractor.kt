@@ -24,8 +24,8 @@ class ConverterInteractor @Inject constructor(
                 .retry()
     }
 
-    fun isCurrencyEquals(oldCode: String, newCode: String, oldAmount: Float, newAmount: Float): Boolean {
-        return oldCode == newCode && Math.abs(oldAmount - newAmount) < MONEY_DIFF_PRECISION
+    fun needRecalculate(oldCode: String, newCode: String, oldAmount: Float, newAmount: Float): Boolean {
+        return oldCode != newCode || Math.abs(oldAmount - newAmount) > MONEY_DIFF_PRECISION
     }
 
     private fun calculateExchangeRate(original: RateList, sourceAmount: Float): RateList {

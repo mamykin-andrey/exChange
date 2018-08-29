@@ -10,7 +10,7 @@ class RatesDataSourceFactory @Inject constructor(
         @LocalDataSource
         private val localDataSource: RatesDataSource
 ) {
-    fun create(force: Boolean = false) = when (force) {
+    fun create(force: Boolean) = when (force) {
         true -> remoteDataSource
         false -> localDataSource
     }
@@ -18,9 +18,4 @@ class RatesDataSourceFactory @Inject constructor(
     fun createRemoteDataSource(): RatesDataSource = remoteDataSource
 
     fun createLocalDataSource(): RatesDataSource = localDataSource
-
-    sealed class DataSourceType {
-        object Local : DataSourceType()
-        object Remote : DataSourceType()
-    }
 }

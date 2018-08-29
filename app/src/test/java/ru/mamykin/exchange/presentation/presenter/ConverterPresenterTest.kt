@@ -26,57 +26,42 @@ class ConverterPresenterTest {
     @Mock
     lateinit var view: ConverterView
 
-    val schedulersProvider = TestSchedulersProvider()
-
     lateinit var presenter: ConverterPresenter
+    val rateList = RateList(RUB_CURRENCY, Date(), listOf())
 
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        presenter = ConverterPresenter(interactor, schedulersProvider)
+        presenter = ConverterPresenter(interactor, TestSchedulersProvider())
         presenter.setViewState(viewState)
     }
 
     @Test
-    fun onFirstViewAttach_shouldShowRateList_whenInteractorReturnsRateList() {
-        val rateList = RateList(RUB_CURRENCY, Date(), listOf())
-        whenever(interactor.getRates(RUB_CURRENCY, 1f)).thenReturn(Observable.just(rateList))
+    fun onFirstViewAttach_shouldShowLoading() {
+        whenever(interactor.getRates(RUB_CURRENCY, 1f, true)).thenReturn(Observable.just(rateList))
 
         presenter.attachView(view)
 
-        verify(interactor).getRates(RUB_CURRENCY, 1f)
+        verify(viewState).showLoading(true)
+    }
+
+    @Test
+    fun onFirstViewAttach_shouldShowRateList_whenInteractorReturnsRateList() {
+        whenever(interactor.getRates(RUB_CURRENCY, 1f, true)).thenReturn(Observable.just(rateList))
+
+        presenter.attachView(view)
+
+        verify(interactor).getRates(RUB_CURRENCY, 1f, true)
         verify(viewState).showRateList(rateList)
     }
 
     @Test
-    fun onFirstViewAttach_shouldShowLoadingError_whenInteractorReturnsError() {
-        whenever(interactor.getRates(RUB_CURRENCY, 1f)).thenReturn(Observable.error(RuntimeException()))
-
-        presenter.attachView(view)
-
-        verify(interactor).getRates(RUB_CURRENCY, 1f)
-        verify(viewState).showLoadingError()
-    }
-
-    @Test
-    fun onCurrencyOrAmountChanged_shouldLoadRateList() {
-        val newCurrencyCode = "EUR"
-        val newCurrencyAmount = 1.0f
-        whenever(interactor.getRates(newCurrencyCode, newCurrencyAmount))
-                .thenReturn(Observable.just(RateList(newCurrencyCode, Date(), listOf())))
-
-        presenter.onCurrencyOrAmountChanged(newCurrencyCode, newCurrencyAmount)
-
-        verify(interactor).getRates(newCurrencyCode, newCurrencyAmount)
-    }
-
-    @Test
     fun onViewStop_shouldStopRatesUpdates() {
-        whenever(interactor.getRates(any(), any()))
+        whenever(interactor.getRates(any(), any(), any()))
                 .thenReturn(Observable.just(RateList("RUB", Date(), listOf())))
 
         presenter.attachView(view)
-        verify(interactor).getRates(any(), any())
+        verify(interactor).getRates(any(), any(), any())
 
         presenter.onViewStop()
         verifyNoMoreInteractions(interactor)
@@ -84,14 +69,35 @@ class ConverterPresenterTest {
 
     @Test
     fun onViewStart_shouldStartRatesUpdates_whenViewIsFromStopState() {
-        whenever(interactor.getRates(any(), any()))
+        whenever(interactor.getRates(any(), any(), any()))
                 .thenReturn(Observable.just(RateList("RUB", Date(), listOf())))
 
         presenter.attachView(view)
-        verify(interactor).getRates(any(), any())
+        verify(interactor).getRates(any(), any(), any())
 
         presenter.onViewStop()
         presenter.onViewStart()
-        verify(interactor, times(2)).getRates(any(), any())
+        verify(interactor, times(2)).getRates(any(), any(), any())
+    }
+
+    @Test
+    fun onCurrencyOrAmountChanged_shouldLoadRateList_whenNeedRecalculateReturnsTrue() {
+        val newCurrency = "EUR"
+        val newAmount = 1.0f
+        whenever(interactor.getRates(newCurrency, newAmount, true)).thenReturn(Observable.just(rateList))
+        whenever(interactor.needRecalculate(any(), any(), any(), any())).thenReturn(true)
+
+        presenter.onCurrencyOrAmountChanged(newCurrency, newAmount)
+
+        verify(interactor).getRates(newCurrency, newAmount, true)
+    }
+
+    @Test
+    fun onCurrencyOrAmountChanged_shouldNotLoadRateList_whenNeedRecalculateReturnsFalse() {
+        whenever(interactor.needRecalculate(any(), any(), any(), any())).thenReturn(false)
+
+        presenter.onCurrencyOrAmountChanged("EUR", 1.0f)
+
+        verify(interactor, times(0)).getRates(any(), any(), any())
     }
 }

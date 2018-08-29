@@ -1,6 +1,7 @@
 package ru.mamykin.exchange.data.repository
 
 import com.nhaarman.mockito_kotlin.inOrder
+import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Maybe
@@ -10,8 +11,6 @@ import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import ru.mamykin.exchange.data.repository.datasource.RatesDataSource
 import ru.mamykin.exchange.data.repository.datasource.RatesDataSourceFactory
-import ru.mamykin.exchange.data.repository.datasource.RatesDataSourceFactory.DataSourceType.Local
-import ru.mamykin.exchange.data.repository.datasource.RatesDataSourceFactory.DataSourceType.Remote
 import ru.mamykin.exchange.domain.entity.RateList
 import java.util.*
 
@@ -28,42 +27,55 @@ class RatesRepositoryTest {
     @Mock
     lateinit var dataSourceFactory: RatesDataSourceFactory
 
-    lateinit var rateList: RateList
-
+    lateinit var rateList1: RateList
+    lateinit var rateList2: RateList
     lateinit var repository: RatesRepository
 
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
         repository = RatesRepository(dataSourceFactory)
-        rateList = RateList(RUB_CURRENCY, Date(), listOf())
-        whenever(dataSourceFactory.create(Local)).thenReturn(localDataSource)
-        whenever(dataSourceFactory.create(Remote)).thenReturn(remoteDataSource)
-        whenever(dataSourceFactory.create()).thenReturn(localDataSource)
+        rateList1 = RateList(RUB_CURRENCY, Date(), listOf())
+        rateList2 = RateList("USD", Date(), listOf())
+        whenever(dataSourceFactory.createLocalDataSource()).thenReturn(localDataSource)
+        whenever(dataSourceFactory.createRemoteDataSource()).thenReturn(remoteDataSource)
+        whenever(dataSourceFactory.create(true)).thenReturn(remoteDataSource)
+        whenever(dataSourceFactory.create(false)).thenReturn(localDataSource)
     }
 
     @Test
-    fun getRates_shouldSwitchToRemoteDataSource_whenDataAreEmpty() {
-        whenever(localDataSource.getRates(RUB_CURRENCY)).thenReturn(Maybe.empty())
-        whenever(remoteDataSource.getRates(RUB_CURRENCY)).thenReturn(Maybe.just(rateList))
+    fun getRates_shouldReturnDataFromRemoteDataSource_whenForceFlagIsTrue() {
+        whenever(localDataSource.getRates(RUB_CURRENCY)).thenReturn(Maybe.just(rateList1))
+        whenever(remoteDataSource.getRates(RUB_CURRENCY)).thenReturn(Maybe.just(rateList2))
 
-        val testObserver = repository.getRates(RUB_CURRENCY).test()
+        val testObserver = repository.getRates(RUB_CURRENCY, true).test()
 
-        testObserver.assertNoErrors().assertValue(rateList)
-        verify(localDataSource).getRates(RUB_CURRENCY)
+        testObserver.assertNoErrors().assertValue(rateList2)
         verify(remoteDataSource).getRates(RUB_CURRENCY)
-        inOrder(localDataSource, remoteDataSource)
+        verify(localDataSource, times(0)).getRates(RUB_CURRENCY)
     }
 
     @Test
-    fun getRates_shouldCacheData_whenDataLoadedSucceed() {
-        whenever(localDataSource.getRates(RUB_CURRENCY)).thenReturn(Maybe.just(rateList))
-        whenever(remoteDataSource.getRates(RUB_CURRENCY))
-                .thenReturn(Maybe.just(RateList("USD", Date(), listOf())))
+    fun getRates_shouldSwitchToRemoteDataSource_whenForceFlagIsFalse_andLocalDataAreEmpty() {
+        whenever(localDataSource.getRates(RUB_CURRENCY)).thenReturn(Maybe.empty())
+        whenever(remoteDataSource.getRates(RUB_CURRENCY)).thenReturn(Maybe.just(rateList1))
 
-        val testObserver = repository.getRates(RUB_CURRENCY).test()
+        val testObserver = repository.getRates(RUB_CURRENCY, false).test()
 
-        testObserver.assertNoErrors().assertValue(rateList)
-        verify(localDataSource).cacheRates(rateList)
+        testObserver.assertNoErrors().assertValue(rateList1)
+        inOrder(localDataSource, remoteDataSource) {
+            verify(localDataSource).getRates(RUB_CURRENCY)
+            verify(remoteDataSource).getRates(RUB_CURRENCY)
+        }
+    }
+
+    @Test
+    fun getRates_shouldCacheData_whenDataHasSuccessfulLoaded() {
+        whenever(remoteDataSource.getRates(RUB_CURRENCY)).thenReturn(Maybe.just(rateList2))
+
+        val testObserver = repository.getRates(RUB_CURRENCY, true).test()
+
+        testObserver.assertNoErrors().assertValue(rateList2)
+        verify(localDataSource).cacheRates(rateList2)
     }
 }

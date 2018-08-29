@@ -48,7 +48,7 @@ class ConverterPresenter @Inject constructor(
     }
 
     fun onCurrencyOrAmountChanged(newCurrency: String, newAmount: Float) {
-        if (interactor.isCurrencyEquals(newCurrency, currency, newAmount, amount))
+        if (!interactor.needRecalculate(newCurrency, currency, newAmount, amount))
             return
 
         val currencyChanged = newCurrency != currency
