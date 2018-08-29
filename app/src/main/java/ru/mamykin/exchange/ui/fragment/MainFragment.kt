@@ -8,6 +8,9 @@ import ru.mamykin.exchange.R
 import ru.mamykin.exchange.core.platform.BaseFragment
 import ru.mamykin.exchange.ui.adapter.MainViewPagerAdapter
 
+/**
+ * Fragment, which host screens "Rates", "Converter" and "Alerts"
+ */
 class MainFragment : BaseFragment() {
 
     companion object {

@@ -2,7 +2,7 @@ package ru.mamykin.exchange
 
 import io.reactivex.Scheduler
 import io.reactivex.schedulers.Schedulers
-import ru.mamykin.exchange.core.scheduler.SchedulersProvider
+import ru.mamykin.exchange.core.rx.SchedulersProvider
 
 class TestSchedulersProvider : SchedulersProvider {
 

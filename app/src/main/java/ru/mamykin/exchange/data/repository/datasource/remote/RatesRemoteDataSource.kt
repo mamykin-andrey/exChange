@@ -1,7 +1,7 @@
 package ru.mamykin.exchange.data.repository.datasource.remote
 
 import io.reactivex.Maybe
-import ru.mamykin.exchange.core.exception.DataSourceAccessException
+import ru.mamykin.exchange.core.exception.WrongDataSourceException
 import ru.mamykin.exchange.data.network.model.mapper.RateListResponseToRateListMapper
 import ru.mamykin.exchange.data.network.RatesApi
 import ru.mamykin.exchange.data.repository.datasource.RatesDataSource
@@ -18,6 +18,6 @@ class RatesRemoteDataSource @Inject constructor(
     }
 
     override fun cacheRates(rateList: RateList) {
-        throw DataSourceAccessException("Remote DataSource cannot perform this operation!")
+        throw WrongDataSourceException("Remote DataSource cannot perform this operation!")
     }
 }

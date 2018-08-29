@@ -1,7 +1,7 @@
 package ru.mamykin.exchange.domain.interactor
 
 import io.reactivex.Observable
-import ru.mamykin.exchange.core.scheduler.SchedulersProvider
+import ru.mamykin.exchange.core.rx.SchedulersProvider
 import ru.mamykin.exchange.data.repository.RatesRepository
 import ru.mamykin.exchange.domain.entity.Rate
 import ru.mamykin.exchange.domain.entity.RateList

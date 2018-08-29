@@ -14,6 +14,9 @@ import ru.mamykin.exchange.presentation.view.ConverterView
 import ru.mamykin.exchange.ui.adapter.CurrencyRatesRecyclerAdapter
 import toothpick.Toothpick
 
+/**
+ * Converter screen
+ */
 class ConverterFragment : BaseFragment(), ConverterView {
 
     companion object {

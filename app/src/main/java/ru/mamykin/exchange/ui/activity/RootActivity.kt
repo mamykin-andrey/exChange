@@ -5,8 +5,12 @@ import android.content.Intent
 import android.os.Bundle
 import ru.mamykin.exchange.R
 import ru.mamykin.exchange.core.platform.BaseActivity
+import ru.mamykin.exchange.core.platform.UiUtils
 import ru.mamykin.exchange.ui.fragment.MainFragment
 
+/**
+ * Activity, which hosts all fragments in app
+ */
 class RootActivity : BaseActivity() {
 
     companion object {
@@ -18,6 +22,7 @@ class RootActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_root)
 
-        addFragment(R.id.flContainer, MainFragment.newInstance(), false)
+        UiUtils.addFragment(supportFragmentManager,
+                R.id.flContainer, MainFragment.newInstance(), false)
     }
 }

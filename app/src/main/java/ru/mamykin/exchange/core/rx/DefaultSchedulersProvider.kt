@@ -1,4 +1,4 @@
-package ru.mamykin.exchange.core.scheduler
+package ru.mamykin.exchange.core.rx
 
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers

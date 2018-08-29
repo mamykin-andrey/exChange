@@ -15,6 +15,9 @@ import ru.mamykin.exchange.core.platform.UiUtils
 import ru.mamykin.exchange.domain.entity.Rate
 import java.util.concurrent.TimeUnit
 
+/**
+ * ViewHolder, which represents a single currency
+ */
 class CurrencyRateViewHolder(
         private val context: Context,
         itemView: View

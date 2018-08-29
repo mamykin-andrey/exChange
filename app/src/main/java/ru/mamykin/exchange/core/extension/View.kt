@@ -32,11 +32,3 @@ fun EditText.textChangedEvents(): Observable<String> {
         })
     }
 }
-
-fun Editable.toFloat(): Float {
-    return try {
-        this.toString().toFloat()
-    } catch (e: NumberFormatException) {
-        0f
-    }
-}

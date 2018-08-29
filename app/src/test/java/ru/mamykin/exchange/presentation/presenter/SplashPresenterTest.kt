@@ -5,7 +5,6 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import ru.mamykin.exchange.presentation.presenter.SplashPresenter
 import ru.mamykin.exchange.presentation.router.SplashRouter
 
 class SplashPresenterTest {
