@@ -8,6 +8,4 @@ interface ConverterView : MvpView {
     fun showLoading(show: Boolean)
 
     fun showRateList(rateList: RateList)
-
-    fun showLoadingError()
 }

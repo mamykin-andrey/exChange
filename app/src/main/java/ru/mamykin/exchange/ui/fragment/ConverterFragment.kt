@@ -2,9 +2,6 @@ package ru.mamykin.exchange.ui.fragment
 
 import android.os.Bundle
 import android.view.View
-import android.view.WindowManager
-import android.widget.Toast
-import androidx.fragment.app.DialogFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_converter.*
@@ -15,14 +12,11 @@ import ru.mamykin.exchange.domain.entity.RateList
 import ru.mamykin.exchange.presentation.presenter.ConverterPresenter
 import ru.mamykin.exchange.presentation.view.ConverterView
 import ru.mamykin.exchange.ui.adapter.CurrencyRatesRecyclerAdapter
-import ru.mamykin.exchange.ui.dialog.ProgressDialogFragment
 import toothpick.Toothpick
 
 class ConverterFragment : BaseFragment(), ConverterView {
 
     companion object {
-        private const val PROGRESS_DIALOG_TAG = "progress_dialog_tag"
-
         fun newInstance() = ConverterFragment()
     }
 
@@ -32,7 +26,6 @@ class ConverterFragment : BaseFragment(), ConverterView {
     lateinit var presenter: ConverterPresenter
 
     private lateinit var adapter: CurrencyRatesRecyclerAdapter
-    private var progressDialog: DialogFragment? = null
 
     @ProvidePresenter
     fun provideConverterPresenter(): ConverterPresenter {
@@ -43,8 +36,6 @@ class ConverterFragment : BaseFragment(), ConverterView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         lifecycle.addObserver(presenter)
-        activity?.window?.setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -52,25 +43,18 @@ class ConverterFragment : BaseFragment(), ConverterView {
         initRatesAdapter()
     }
 
-    override fun onFinish() {
-        super.onFinish()
+    override fun onDestroy() {
+        super.onDestroy()
         Toothpick.closeScope(this)
     }
 
     override fun showLoading(show: Boolean) {
-        progressDialog?.dismiss()
-        if (show) {
-            progressDialog = ProgressDialogFragment.newInstance()
-            progressDialog!!.show(fragmentManager, PROGRESS_DIALOG_TAG)
-        }
+        loadingProgressBar.visibility = if (show) View.VISIBLE else View.GONE
+        ratesRecyclerView.visibility = if (show) View.GONE else View.VISIBLE
     }
 
     override fun showRateList(rateList: RateList) {
         adapter.changeCurrencyRates(rateList.rates)
-    }
-
-    override fun showLoadingError() {
-        Toast.makeText(context, "Error was occured", Toast.LENGTH_LONG).show()
     }
 
     private fun initRatesAdapter() {
@@ -79,6 +63,7 @@ class ConverterFragment : BaseFragment(), ConverterView {
             presenter.onCurrencyOrAmountChanged(code, amount)
         }
         adapter.setHasStableIds(true)
+        ratesRecyclerView.setHasFixedSize(true)
         ratesRecyclerView.adapter = adapter
     }
 }
