@@ -3,21 +3,23 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
-def appCompatVersion = '1.0.0-rc01'
-def constraintLayoutVersion = '1.1.2'
+def appCompatVersion = '1.3.0-alpha02'
+def materialVersion = '1.3.0-alpha04'
+def multidex_version = "2.0.1"
+def constraintLayoutVersion = '2.1.0-alpha1'
 def toothpickVersion = '1.1.3'
 def rxAndroidVersion = '2.0.2'
-def rxJavaVersion = '2.2.0'
-def retrofitVersion = '2.3.0'
-def okHttpVersion = '3.8.0'
-def picassoVersion = '2.5.2'
+def rxJavaVersion = '2.2.3'
+def retrofitVersion = '2.6.4'
+def okHttpVersion = '4.3.0'
+def picassoVersion = '2.71828'
 def circularImageViewVersion = '3.2.0'
 def moxyVersion = '2.2.0'
-def junitVersion = '4.12'
-def mockitoCoreVersion = '2.13.0'
+def junitVersion = '4.13.1'
+def mockitoCoreVersion = '2.27.0'
 def mockitoKotlinVersion = '1.5.0'
-def androidTestRunnerVersion = '1.1.0-alpha4'
-def espressoCoreVersion = '3.1.0-alpha4'
+def androidTestRunnerVersion = '1.3.1-alpha02'
+def espressoCoreVersion = '3.4.0-alpha02'
 def nav_version = "2.3.1"
 
 android {
@@ -29,6 +31,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = [toothpick_registry_package_name: "ru.mamykin.exchange"]
@@ -54,9 +57,11 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
+    implementation "androidx.multidex:multidex:$multidex_version"
+
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
-    implementation "com.google.android.material:material:$appCompatVersion"
+    implementation "com.google.android.material:material:$materialVersion"
 
     implementation "com.github.stephanenicolas.toothpick:toothpick-runtime:$toothpickVersion"
     kapt "com.github.stephanenicolas.toothpick:toothpick-compiler:$toothpickVersion"

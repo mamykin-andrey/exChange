@@ -9,8 +9,8 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.item_currency_rate.view.*
 import ru.mamykin.exchange.R
 import ru.mamykin.exchange.core.extension.onFocusedEvents
-import ru.mamykin.exchange.core.extension.textChangedEvents
 import ru.mamykin.exchange.core.extension.parseFloat
+import ru.mamykin.exchange.core.extension.textChangedEvents
 import ru.mamykin.exchange.core.platform.UiUtils
 import ru.mamykin.exchange.domain.entity.Rate
 import java.util.concurrent.TimeUnit
@@ -19,8 +19,8 @@ import java.util.concurrent.TimeUnit
  * ViewHolder, which represents a single currency
  */
 class CurrencyRateViewHolder(
-        private val context: Context,
-        itemView: View
+    private val context: Context,
+    itemView: View
 ) : RecyclerView.ViewHolder(itemView) {
 
     companion object {
@@ -46,10 +46,10 @@ class CurrencyRateViewHolder(
 
     private fun bindCurrencySubtitle(currencyCode: String) {
         val stringResId = UiUtils.getStringResId(
-                context,
-                NAME_PREFIX,
-                currencyCode.toLowerCase(),
-                DEFAULT_NAME
+            context,
+            NAME_PREFIX,
+            currencyCode.toLowerCase(),
+            DEFAULT_NAME
         )
         itemView.currencyNameTextView.setText(stringResId)
     }
@@ -60,31 +60,31 @@ class CurrencyRateViewHolder(
                 setText(rate.getDisplayAmount())
             }
             onFocusedEvents()
-                    .subscribeOn(Schedulers.io())
-                    .debounce(300, TimeUnit.MILLISECONDS)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { currencyOrAmountChangedFunc(rate.code, text.parseFloat()) }
+                .subscribeOn(Schedulers.io())
+                .debounce(300, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { currencyOrAmountChangedFunc(rate.code, text.parseFloat()) }
             textChangedEvents()
-                    .subscribeOn(Schedulers.io())
-                    .filter(String::isNotBlank)
-                    .debounce(500, TimeUnit.MILLISECONDS)
-                    .distinctUntilChanged()
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { currencyOrAmountChangedFunc(rate.code, it.toFloat()) }
+                .subscribeOn(Schedulers.io())
+                .filter(String::isNotBlank)
+                .debounce(500, TimeUnit.MILLISECONDS)
+                .distinctUntilChanged()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { currencyOrAmountChangedFunc(rate.code, it.toFloat()) }
         }
     }
 
     private fun bindCurrencyIcon(currencyCode: String) {
         val iconResId = UiUtils.getDrawableResId(
-                context,
-                ICON_PREFIX,
-                currencyCode.toLowerCase(),
-                DEFAULT_ICON
+            context,
+            ICON_PREFIX,
+            currencyCode.toLowerCase(),
+            DEFAULT_ICON
         )
-        Picasso.with(context)
-                .load(iconResId)
-                .resize(100, 100)
-                .centerInside()
-                .into(itemView.currencyIconImageView)
+        Picasso.get()
+            .load(iconResId)
+            .resize(100, 100)
+            .centerInside()
+            .into(itemView.currencyIconImageView)
     }
 }
