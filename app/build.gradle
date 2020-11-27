@@ -12,12 +12,13 @@ def retrofitVersion = '2.3.0'
 def okHttpVersion = '3.8.0'
 def picassoVersion = '2.5.2'
 def circularImageViewVersion = '3.2.0'
-def moxyVersion = '1.5.3'
+def moxyVersion = '2.2.0'
 def junitVersion = '4.12'
 def mockitoCoreVersion = '2.13.0'
 def mockitoKotlinVersion = '1.5.0'
 def androidTestRunnerVersion = '1.1.0-alpha4'
 def espressoCoreVersion = '3.1.0-alpha4'
+def nav_version = "2.3.1"
 
 android {
     compileSdkVersion 28
@@ -32,6 +33,13 @@ android {
             annotationProcessorOptions {
                 arguments = [toothpick_registry_package_name: "ru.mamykin.exchange"]
             }
+        }
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
+        kotlinOptions {
+            jvmTarget = "1.8"
         }
     }
     buildTypes {
@@ -64,9 +72,11 @@ dependencies {
 
     implementation "com.mikhaellopez:circularimageview:$circularImageViewVersion"
 
-    implementation "com.arello-mobile:moxy:$moxyVersion"
-    implementation "com.arello-mobile:moxy-app-compat:$moxyVersion"
-    kapt "com.arello-mobile:moxy-compiler:$moxyVersion"
+    implementation "com.github.moxy-community:moxy-ktx:$moxyVersion"
+    implementation "com.github.moxy-community:moxy-app-compat:$moxyVersion"
+    kapt "com.github.moxy-community:moxy-compiler:$moxyVersion"
+
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
 
     testImplementation "junit:junit:$junitVersion"
     testImplementation "org.mockito:mockito-core:$mockitoCoreVersion"
