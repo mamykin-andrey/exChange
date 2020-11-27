@@ -8,7 +8,7 @@ import ru.mamykin.exchange.data.network.model.RateListResponse
 interface RatesApi {
 
     companion object {
-        const val BASE_URL = "https://revolut.duckdns.org"
+        const val BASE_URL = "https://api.exchangeratesapi.io"
     }
 
     @GET("latest")
