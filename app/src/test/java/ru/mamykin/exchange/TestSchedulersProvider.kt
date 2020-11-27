@@ -1,4 +1,4 @@
-package ru.mamykin.exchange.internal
+package ru.mamykin.exchange
 
 import io.reactivex.Scheduler
 import io.reactivex.schedulers.Schedulers

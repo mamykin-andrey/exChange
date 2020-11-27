@@ -1,4 +1,4 @@
-package ru.mamykin.exchange.ui.viewholder
+package ru.mamykin.exchange.presentation.converter
 
 import android.content.Context
 import android.view.View
@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.item_currency_rate.view.*
 import ru.mamykin.exchange.R
 import ru.mamykin.exchange.core.extension.onFocusedEvents
 import ru.mamykin.exchange.core.extension.textChangedEvents
-import ru.mamykin.exchange.core.extension.toFloat
+import ru.mamykin.exchange.core.extension.parseFloat
 import ru.mamykin.exchange.core.platform.UiUtils
 import ru.mamykin.exchange.domain.entity.Rate
 import java.util.concurrent.TimeUnit
@@ -63,7 +63,7 @@ class CurrencyRateViewHolder(
                     .subscribeOn(Schedulers.io())
                     .debounce(300, TimeUnit.MILLISECONDS)
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { currencyOrAmountChangedFunc(rate.code, text.toFloat()) }
+                    .subscribe { currencyOrAmountChangedFunc(rate.code, text.parseFloat()) }
             textChangedEvents()
                     .subscribeOn(Schedulers.io())
                     .filter(String::isNotBlank)

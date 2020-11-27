@@ -1,4 +1,4 @@
-package ru.mamykin.exchange.ui.fragment
+package ru.mamykin.exchange.presentation.converter
 
 import android.os.Bundle
 import android.view.View
@@ -8,9 +8,6 @@ import ru.mamykin.exchange.R
 import ru.mamykin.exchange.core.di.Scopes
 import ru.mamykin.exchange.core.platform.BaseFragment
 import ru.mamykin.exchange.domain.entity.RateList
-import ru.mamykin.exchange.presentation.presenter.ConverterPresenter
-import ru.mamykin.exchange.presentation.view.ConverterView
-import ru.mamykin.exchange.ui.adapter.CurrencyRatesRecyclerAdapter
 import toothpick.Toothpick
 
 /**

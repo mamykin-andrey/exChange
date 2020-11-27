@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="ru.mamykin.exchange.ui.fragment.MainFragment"
+        android:name="ru.mamykin.exchange.presentation.main.MainFragment"
         android:label="MainFragment"
         tools:layout="@layout/fragment_main" />
 

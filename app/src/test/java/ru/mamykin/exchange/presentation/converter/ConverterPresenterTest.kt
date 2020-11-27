@@ -1,4 +1,4 @@
-package ru.mamykin.exchange.presentation.presenter
+package ru.mamykin.exchange.presentation.converter
 
 import com.nhaarman.mockito_kotlin.*
 import io.reactivex.Observable
@@ -6,11 +6,9 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import ru.mamykin.exchange.internal.TestSchedulersProvider
+import ru.mamykin.exchange.TestSchedulersProvider
 import ru.mamykin.exchange.domain.entity.RateList
-import ru.mamykin.exchange.domain.interactor.ConverterInteractor
-import ru.mamykin.exchange.presentation.view.ConverterView
-import ru.mamykin.exchange.presentation.view.`ConverterView$$State`
+import ru.mamykin.exchange.domain.converter.ConverterInteractor
 import java.util.*
 
 class ConverterPresenterTest {

@@ -1,4 +1,4 @@
-package ru.mamykin.exchange.domain.interactor
+package ru.mamykin.exchange.domain.converter.interactor
 
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Single
@@ -12,10 +12,11 @@ import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import ru.mamykin.exchange.internal.TestSchedulerRule
+import ru.mamykin.exchange.TestSchedulerRule
 import ru.mamykin.exchange.core.extension.skip
 import ru.mamykin.exchange.core.rx.DefaultSchedulersProvider
 import ru.mamykin.exchange.data.repository.RatesRepository
+import ru.mamykin.exchange.domain.converter.ConverterInteractor
 import ru.mamykin.exchange.domain.entity.Rate
 import ru.mamykin.exchange.domain.entity.RateList
 import java.util.*

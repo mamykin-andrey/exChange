@@ -1,4 +1,4 @@
-package ru.mamykin.exchange.domain.interactor
+package ru.mamykin.exchange.domain.converter
 
 import io.reactivex.Observable
 import ru.mamykin.exchange.core.rx.SchedulersProvider

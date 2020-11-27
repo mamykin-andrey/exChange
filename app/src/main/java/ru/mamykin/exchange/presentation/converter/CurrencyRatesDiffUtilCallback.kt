@@ -1,4 +1,4 @@
-package ru.mamykin.exchange.ui.adapter.diffutil
+package ru.mamykin.exchange.presentation.converter
 
 import androidx.recyclerview.widget.DiffUtil
 import ru.mamykin.exchange.domain.entity.Rate

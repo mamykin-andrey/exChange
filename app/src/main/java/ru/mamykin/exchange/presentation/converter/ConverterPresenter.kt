@@ -1,4 +1,4 @@
-package ru.mamykin.exchange.presentation.presenter
+package ru.mamykin.exchange.presentation.converter
 
 import androidx.lifecycle.Lifecycle.Event.ON_RESUME
 import androidx.lifecycle.Lifecycle.Event.ON_STOP
@@ -9,14 +9,13 @@ import moxy.InjectViewState
 import ru.mamykin.exchange.core.mvp.BasePresenter
 import ru.mamykin.exchange.core.rx.SchedulersProvider
 import ru.mamykin.exchange.domain.entity.RateList
-import ru.mamykin.exchange.domain.interactor.ConverterInteractor
-import ru.mamykin.exchange.presentation.view.ConverterView
+import ru.mamykin.exchange.domain.converter.ConverterInteractor
 import javax.inject.Inject
 
 @InjectViewState
 class ConverterPresenter @Inject constructor(
-        private val interactor: ConverterInteractor,
-        private val schedulersProvider: SchedulersProvider
+    private val interactor: ConverterInteractor,
+    private val schedulersProvider: SchedulersProvider
 ) : BasePresenter<ConverterView>(), LifecycleObserver {
 
     private var ratesDisposable: Disposable? = null

@@ -1,4 +1,4 @@
-package ru.mamykin.exchange.presentation.view
+package ru.mamykin.exchange.presentation.converter
 
 import moxy.MvpView
 import moxy.viewstate.strategy.alias.AddToEnd

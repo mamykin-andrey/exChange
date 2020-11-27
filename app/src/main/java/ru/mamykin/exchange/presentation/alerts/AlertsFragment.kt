@@ -1,4 +1,4 @@
-package ru.mamykin.exchange.ui.fragment
+package ru.mamykin.exchange.presentation.alerts
 
 import ru.mamykin.exchange.R
 import ru.mamykin.exchange.core.platform.BaseFragment

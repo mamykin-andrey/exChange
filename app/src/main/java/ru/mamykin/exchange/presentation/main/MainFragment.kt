@@ -1,4 +1,4 @@
-package ru.mamykin.exchange.ui.fragment
+package ru.mamykin.exchange.presentation.main
 
 import android.os.Bundle
 import android.view.View
@@ -6,7 +6,9 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.fragment_main.*
 import ru.mamykin.exchange.R
 import ru.mamykin.exchange.core.platform.BaseFragment
-import ru.mamykin.exchange.ui.adapter.MainViewPagerAdapter
+import ru.mamykin.exchange.presentation.alerts.AlertsFragment
+import ru.mamykin.exchange.presentation.converter.ConverterFragment
+import ru.mamykin.exchange.presentation.rates.RatesFragment
 
 /**
  * Fragment, which host screens "Rates", "Converter" and "Alerts"
