@@ -4,8 +4,8 @@ import androidx.lifecycle.Lifecycle.Event.ON_RESUME
 import androidx.lifecycle.Lifecycle.Event.ON_STOP
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
-import com.arellomobile.mvp.InjectViewState
 import io.reactivex.disposables.Disposable
+import moxy.InjectViewState
 import ru.mamykin.exchange.core.mvp.BasePresenter
 import ru.mamykin.exchange.core.rx.SchedulersProvider
 import ru.mamykin.exchange.domain.entity.RateList

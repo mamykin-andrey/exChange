@@ -4,14 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import ru.mamykin.exchange.core.mvp.AndroidxMvpFragment
+import moxy.MvpAppCompatFragment
 
-abstract class BaseFragment : AndroidxMvpFragment() {
+abstract class BaseFragment : MvpAppCompatFragment() {
 
     abstract val layoutId: Int
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(layoutId, container, false)
     }
 }

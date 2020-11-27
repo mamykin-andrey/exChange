@@ -2,9 +2,8 @@ package ru.mamykin.exchange.ui.fragment
 
 import android.os.Bundle
 import android.view.View
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_converter.*
+import moxy.ktx.moxyPresenter
 import ru.mamykin.exchange.R
 import ru.mamykin.exchange.core.di.Scopes
 import ru.mamykin.exchange.core.platform.BaseFragment
@@ -25,16 +24,12 @@ class ConverterFragment : BaseFragment(), ConverterView {
 
     override val layoutId = R.layout.fragment_converter
 
-    @InjectPresenter
-    lateinit var presenter: ConverterPresenter
+    private val presenter by moxyPresenter {
+        Toothpick.openScopes(Scopes.APP_SCOPE, this)
+            .getInstance(ConverterPresenter::class.java)
+    }
 
     private lateinit var adapter: CurrencyRatesRecyclerAdapter
-
-    @ProvidePresenter
-    fun provideConverterPresenter(): ConverterPresenter {
-        return Toothpick.openScopes(Scopes.APP_SCOPE, this)
-                .getInstance(ConverterPresenter::class.java)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
