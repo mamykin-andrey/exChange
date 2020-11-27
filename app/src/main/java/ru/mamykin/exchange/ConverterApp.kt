@@ -11,6 +11,7 @@ import toothpick.configuration.Configuration
 import toothpick.registries.FactoryRegistryLocator
 import toothpick.registries.MemberInjectorRegistryLocator
 
+@Suppress("unused")
 class ConverterApp : Application() {
 
     override fun onCreate() {

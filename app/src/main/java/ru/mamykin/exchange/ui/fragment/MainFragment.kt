@@ -15,8 +15,6 @@ class MainFragment : BaseFragment() {
 
     companion object {
         private const val CONVERTER_POSITION = 1
-
-        fun newInstance() = MainFragment()
     }
 
     override val layoutId = R.layout.fragment_main
