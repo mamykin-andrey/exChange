@@ -1,28 +1,23 @@
 package ru.mamykin.exchange.presentation.converter.list
 
 import android.content.Context
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_currency_rate.view.*
 import ru.mamykin.exchange.R
 import ru.mamykin.exchange.core.extension.onFocusedEvents
 import ru.mamykin.exchange.core.extension.parseFloat
 import ru.mamykin.exchange.core.extension.textChangedEvents
 import ru.mamykin.exchange.core.platform.UiUtils
+import ru.mamykin.exchange.databinding.ItemCurrencyRateBinding
 import ru.mamykin.exchange.domain.entity.Rate
 import java.util.concurrent.TimeUnit
 
-/**
- * ViewHolder, which represents a single currency
- */
 class CurrencyRateViewHolder(
     private val context: Context,
-    override val containerView: View
-) : RecyclerView.ViewHolder(containerView), LayoutContainer {
+    private val binding: ItemCurrencyRateBinding
+) : RecyclerView.ViewHolder(binding.root) {
 
     companion object {
         private const val ICON_PREFIX = "cur_icon_"
@@ -41,22 +36,22 @@ class CurrencyRateViewHolder(
         bindAmountInput(rate, currencyOrAmountChangedFunc)
     }
 
-    private fun bindCurrencyTitle(currencyCode: String) {
-        itemView.currencyCodeTextView!!.text = currencyCode
+    private fun bindCurrencyTitle(currencyCode: String) = binding.apply {
+        textCurrencyCode.text = currencyCode
     }
 
-    private fun bindCurrencySubtitle(currencyCode: String) {
+    private fun bindCurrencySubtitle(currencyCode: String) = binding.apply {
         val stringResId = UiUtils.getStringResId(
             context,
             NAME_PREFIX,
             currencyCode.toLowerCase(),
             DEFAULT_NAME
         )
-        itemView.currencyNameTextView.setText(stringResId)
+        textCurrencyName.setText(stringResId)
     }
 
-    private fun bindAmountInput(rate: Rate, currencyOrAmountChangedFunc: (String, Float) -> Unit) {
-        itemView.exchangeAmountEditText.apply {
+    private fun bindAmountInput(rate: Rate, currencyOrAmountChangedFunc: (String, Float) -> Unit) = binding.apply {
+        editExchangeAmount.apply {
             if (!isFocused) {
                 setText(rate.getDisplayAmount())
             }
@@ -75,7 +70,7 @@ class CurrencyRateViewHolder(
         }
     }
 
-    private fun bindCurrencyIcon(currencyCode: String) {
+    private fun bindCurrencyIcon(currencyCode: String) = binding.apply {
         val iconResId = UiUtils.getDrawableResId(
             context,
             ICON_PREFIX,
@@ -86,6 +81,6 @@ class CurrencyRateViewHolder(
             .load(iconResId)
             .resize(100, 100)
             .centerInside()
-            .into(itemView.currencyIconImageView)
+            .into(imageCurrencyIcon)
     }
 }

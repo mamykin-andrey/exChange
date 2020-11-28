@@ -38,7 +38,7 @@ fun EditText.textChangedEvents(): Observable<String> {
 /**
  * Dirty hack - reduce ViewPager2 swipe sensitivity
  */
-fun ViewPager2.reduceDragSensitivity() {
+fun ViewPager2.reduceSwipeSensitivity() {
     val recyclerViewField = ViewPager2::class.java.getDeclaredField("mRecyclerView")
     recyclerViewField.isAccessible = true
     val recyclerView = recyclerViewField.get(this) as RecyclerView

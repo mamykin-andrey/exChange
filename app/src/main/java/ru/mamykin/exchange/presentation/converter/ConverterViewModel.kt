@@ -1,27 +1,28 @@
 package ru.mamykin.exchange.presentation.converter
 
+import androidx.lifecycle.MutableLiveData
 import io.reactivex.disposables.Disposable
-import moxy.InjectViewState
-import ru.mamykin.exchange.core.mvp.BasePresenter
+import ru.mamykin.exchange.core.mvp.BaseViewModel
 import ru.mamykin.exchange.core.rx.SchedulersProvider
 import ru.mamykin.exchange.domain.converter.ConverterInteractor
 import ru.mamykin.exchange.domain.entity.RateList
 import javax.inject.Inject
 
-@InjectViewState
-class ConverterPresenter @Inject constructor(
+class ConverterViewModel @Inject constructor(
     private val interactor: ConverterInteractor,
     override val schedulersProvider: SchedulersProvider
-) : BasePresenter<ConverterView>(schedulersProvider) {
+) : BaseViewModel(schedulersProvider) {
 
     private var ratesDisposable: Disposable? = null
     private var currency = "RUB"
     private var amount = 1.0f
     private var isFirstLoading = true
 
-    override fun onFirstViewAttach() {
-        super.onFirstViewAttach()
-        viewState.showLoading(true)
+    val isLoading = MutableLiveData(true)
+    val rates = MutableLiveData<RateList>()
+
+    init {
+        isLoading.value = true
         loadRates(currency, amount, true)
     }
 
@@ -44,11 +45,11 @@ class ConverterPresenter @Inject constructor(
             .unsubscribeOnDestroy()
     }
 
-    private fun onRatesLoaded(rateList: RateList) {
+    private fun onRatesLoaded(rates: RateList) {
         if (isFirstLoading) {
-            viewState.showLoading(false)
             isFirstLoading = false
+            isLoading.value = false
         }
-        viewState.showRateList(rateList)
+        this.rates.value = rates
     }
 }

@@ -12,9 +12,9 @@ typealias TitledFragment = Pair<String, () -> Fragment>
 class MainViewPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
 
     private val fragments = listOf(
-        TitledFragment(fragment.getString(R.string.rates_tab_title)) { RatesFragment.newInstance() },
-        TitledFragment(fragment.getString(R.string.converter_tab_title)) { ConverterFragment.newInstance() },
-        TitledFragment(fragment.getString(R.string.alerts_tab_title)) { AlertsFragment.newInstance() }
+        TitledFragment(fragment.getString(R.string.rates_tab_title)) { RatesFragment() },
+        TitledFragment(fragment.getString(R.string.converter_tab_title)) { ConverterFragment() },
+        TitledFragment(fragment.getString(R.string.alerts_tab_title)) { AlertsFragment() }
     )
 
     override fun getItemCount(): Int {

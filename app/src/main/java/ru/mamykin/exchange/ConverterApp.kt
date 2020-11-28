@@ -28,9 +28,11 @@ class ConverterApp : Application() {
             MemberInjectorRegistryLocator.setRootRegistry(MemberInjectorRegistry())
         }
         val appScope = Toothpick.openScope(Scopes.APP_SCOPE)
-        appScope.installModules(AppModule(this))
-        appScope.installModules(NetworkModule())
-        appScope.installModules(DataSourceModule())
-        appScope.installModules(SchedulersModule())
+        appScope.installModules(
+            AppModule(this),
+            NetworkModule(),
+            DataSourceModule(),
+            SchedulersModule()
+        )
     }
 }

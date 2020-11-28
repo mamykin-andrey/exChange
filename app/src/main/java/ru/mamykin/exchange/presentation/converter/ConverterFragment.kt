@@ -2,30 +2,20 @@ package ru.mamykin.exchange.presentation.converter
 
 import android.os.Bundle
 import android.view.View
-import kotlinx.android.synthetic.main.fragment_converter.*
-import moxy.ktx.moxyPresenter
+import androidx.core.view.isVisible
 import ru.mamykin.exchange.R
-import ru.mamykin.exchange.core.di.Scopes
+import ru.mamykin.exchange.core.extension.viewBinding
+import ru.mamykin.exchange.core.extension.viewModel
 import ru.mamykin.exchange.core.platform.BaseFragment
+import ru.mamykin.exchange.databinding.FragmentConverterBinding
 import ru.mamykin.exchange.domain.entity.RateList
 import ru.mamykin.exchange.presentation.converter.list.CurrencyRatesRecyclerAdapter
 import toothpick.Toothpick
 
-/**
- * Converter screen
- */
-class ConverterFragment : BaseFragment(), ConverterView {
+class ConverterFragment : BaseFragment(R.layout.fragment_converter) {
 
-    companion object {
-        fun newInstance() = ConverterFragment()
-    }
-
-    override val layoutId = R.layout.fragment_converter
-
-    private val presenter by moxyPresenter {
-        Toothpick.openScopes(Scopes.APP_SCOPE, this)
-            .getInstance(ConverterPresenter::class.java)
-    }
+    private val viewModel by viewModel<ConverterViewModel>()
+    private val binding by viewBinding { FragmentConverterBinding.bind(requireView()) }
 
     private val adapter by lazy {
         CurrencyRatesRecyclerAdapter(requireContext(), ::onCurrencyChanged).apply {
@@ -33,32 +23,39 @@ class ConverterFragment : BaseFragment(), ConverterView {
         }
     }
 
-    private fun onCurrencyChanged(code: String, amount: Float) {
-        ratesRecyclerView.scrollToPosition(0)
-        presenter.onCurrencyOrAmountChanged(code, amount)
+    private fun onCurrencyChanged(code: String, amount: Float) = binding.apply {
+        recyclerRates.scrollToPosition(0)
+        viewModel.onCurrencyOrAmountChanged(code, amount)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRatesAdapter()
+        initViewModel()
+    }
+
+    private fun initViewModel() {
+        viewModel.isLoading.observe { showLoading(it) }
+        viewModel.rates.observe { showRates(it) }
+    }
+
+    private fun initRatesAdapter() = binding.apply {
+        recyclerRates.setHasFixedSize(true)
+        recyclerRates.adapter = adapter
+    }
+
+    private fun showLoading(show: Boolean) {
+        binding.progressLoading.isVisible = show
+        binding.recyclerRates.isVisible = !show
+    }
+
+
+    private fun showRates(rateList: RateList) {
+        adapter.submitList(rateList.rates)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         Toothpick.closeScope(this)
-    }
-
-    override fun showLoading(show: Boolean) {
-        loadingProgressBar.visibility = if (show) View.VISIBLE else View.GONE
-        ratesRecyclerView.visibility = if (show) View.GONE else View.VISIBLE
-    }
-
-    override fun showRateList(rateList: RateList) {
-        adapter.changeCurrencyRates(rateList.rates)
-    }
-
-    private fun initRatesAdapter() {
-        ratesRecyclerView.setHasFixedSize(true)
-        ratesRecyclerView.adapter = adapter
     }
 }

@@ -1,16 +1,12 @@
 package ru.mamykin.exchange.core.platform
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import moxy.MvpAppCompatFragment
+import androidx.annotation.LayoutRes
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
 
-abstract class BaseFragment : MvpAppCompatFragment() {
+abstract class BaseFragment(@LayoutRes layoutId: Int) : Fragment(layoutId) {
 
-    abstract val layoutId: Int
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(layoutId, container, false)
+    protected fun <T> LiveData<T>.observe(observer: (T) -> Unit) {
+        observe(viewLifecycleOwner, { observer(it) })
     }
 }

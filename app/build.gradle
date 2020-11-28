@@ -1,11 +1,10 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 def appCompatVersion = '1.3.0-alpha02'
 def materialVersion = '1.3.0-alpha04'
-def multidex_version = "2.0.1"
+def multidexVersion = "2.0.1"
 def constraintLayoutVersion = '2.1.0-alpha1'
 def toothpickVersion = '1.1.3'
 def rxAndroidVersion = '2.0.2'
@@ -14,13 +13,12 @@ def retrofitVersion = '2.6.4'
 def okHttpVersion = '4.3.0'
 def picassoVersion = '2.71828'
 def circularImageViewVersion = '3.2.0'
-def moxyVersion = '2.2.0'
 def junitVersion = '4.13.1'
 def mockitoCoreVersion = '2.27.0'
 def mockitoKotlinVersion = '1.5.0'
 def androidTestRunnerVersion = '1.3.1-alpha02'
 def espressoCoreVersion = '3.4.0-alpha02'
-def nav_version = "2.3.1"
+def navVersion = "2.3.1"
 
 android {
     compileSdkVersion 28
@@ -32,6 +30,9 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+        buildFeatures {
+            viewBinding true
+        }
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = [toothpick_registry_package_name: "ru.mamykin.exchange"]
@@ -57,7 +58,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    implementation "androidx.multidex:multidex:$multidex_version"
+    implementation "androidx.multidex:multidex:$multidexVersion"
 
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
@@ -77,11 +78,7 @@ dependencies {
 
     implementation "com.mikhaellopez:circularimageview:$circularImageViewVersion"
 
-    implementation "com.github.moxy-community:moxy-ktx:$moxyVersion"
-    implementation "com.github.moxy-community:moxy-app-compat:$moxyVersion"
-    kapt "com.github.moxy-community:moxy-compiler:$moxyVersion"
-
-    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-fragment-ktx:$navVersion"
 
     testImplementation "junit:junit:$junitVersion"
     testImplementation "org.mockito:mockito-core:$mockitoCoreVersion"

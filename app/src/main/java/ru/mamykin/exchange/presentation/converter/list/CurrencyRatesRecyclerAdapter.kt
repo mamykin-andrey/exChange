@@ -5,34 +5,27 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import ru.mamykin.exchange.R
+import ru.mamykin.exchange.databinding.ItemCurrencyRateBinding
 import ru.mamykin.exchange.domain.entity.Rate
 
 class CurrencyRatesRecyclerAdapter(
-        private val context: Context,
-        private val currencySelectedFunc: (String, Float) -> Unit
+    private val context: Context,
+    private val currencySelectedFunc: (String, Float) -> Unit
 ) : ListAdapter<Rate, CurrencyRateViewHolder>(
     CurrencyRatesDiffUtilCallback()
 ) {
-    private var rates: List<Rate> = listOf()
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CurrencyRateViewHolder {
-        val itemView = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_currency_rate, parent, false)
-        return CurrencyRateViewHolder(context, itemView)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_currency_rate, parent, false)
+        val binding = ItemCurrencyRateBinding.bind(itemView)
+        return CurrencyRateViewHolder(context, binding)
     }
-
-    override fun getItemCount(): Int = rates.count()
 
     override fun onBindViewHolder(holder: CurrencyRateViewHolder, position: Int) {
-        holder.bind(rates[position], currencySelectedFunc)
+        holder.bind(getItem(position), currencySelectedFunc)
     }
 
+    // TODO: ???
     override fun getItemId(position: Int): Long {
-        return rates[position].code.hashCode().toLong()
-    }
-
-    fun changeCurrencyRates(rates: List<Rate>) {
-        this.rates = rates
-        notifyDataSetChanged()
+        return getItem(position).code.hashCode().toLong()
     }
 }
