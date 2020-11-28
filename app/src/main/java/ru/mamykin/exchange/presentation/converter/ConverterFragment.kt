@@ -53,7 +53,7 @@ class ConverterFragment : BaseFragment(), ConverterView {
     }
 
     private fun initRatesAdapter() {
-        adapter = CurrencyRatesRecyclerAdapter(context!!) { code, amount ->
+        adapter = CurrencyRatesRecyclerAdapter(requireContext()) { code, amount ->
             ratesRecyclerView.scrollToPosition(0)
             presenter.onCurrencyOrAmountChanged(code, amount)
         }

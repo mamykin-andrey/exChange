@@ -22,7 +22,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/ic_test_currency_icon" />
+        tools:src="@drawable/cur_icon_aud" />
 
     <TextView
         android:id="@+id/currencyCodeTextView"
