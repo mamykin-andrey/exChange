@@ -27,11 +27,15 @@ class ConverterFragment : BaseFragment(), ConverterView {
             .getInstance(ConverterPresenter::class.java)
     }
 
-    private lateinit var adapter: CurrencyRatesRecyclerAdapter
+    private val adapter by lazy {
+        CurrencyRatesRecyclerAdapter(requireContext(), ::onCurrencyChanged).apply {
+            setHasStableIds(true)
+        }
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        lifecycle.addObserver(presenter)
+    private fun onCurrencyChanged(code: String, amount: Float) {
+        ratesRecyclerView.scrollToPosition(0)
+        presenter.onCurrencyOrAmountChanged(code, amount)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -54,11 +58,6 @@ class ConverterFragment : BaseFragment(), ConverterView {
     }
 
     private fun initRatesAdapter() {
-        adapter = CurrencyRatesRecyclerAdapter(requireContext()) { code, amount ->
-            ratesRecyclerView.scrollToPosition(0)
-            presenter.onCurrencyOrAmountChanged(code, amount)
-        }
-        adapter.setHasStableIds(true)
         ratesRecyclerView.setHasFixedSize(true)
         ratesRecyclerView.adapter = adapter
     }

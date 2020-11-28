@@ -31,9 +31,9 @@ class MainFragment : BaseFragment() {
     }
 
     private fun initViewPager() {
+        viewpager.reduceDragSensitivity()
         viewpager.adapter = adapter
         viewpager.currentItem = 1
-        viewpager.reduceDragSensitivity()
         TabLayoutMediator(tablayout, viewpager) { tab, position ->
             tab.text = adapter.getTitle(position)
         }.attach()

@@ -1,22 +1,18 @@
 package ru.mamykin.exchange.presentation.converter
 
-import androidx.lifecycle.Lifecycle.Event.ON_RESUME
-import androidx.lifecycle.Lifecycle.Event.ON_STOP
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
 import io.reactivex.disposables.Disposable
 import moxy.InjectViewState
 import ru.mamykin.exchange.core.mvp.BasePresenter
 import ru.mamykin.exchange.core.rx.SchedulersProvider
-import ru.mamykin.exchange.domain.entity.RateList
 import ru.mamykin.exchange.domain.converter.ConverterInteractor
+import ru.mamykin.exchange.domain.entity.RateList
 import javax.inject.Inject
 
 @InjectViewState
 class ConverterPresenter @Inject constructor(
     private val interactor: ConverterInteractor,
-    private val schedulersProvider: SchedulersProvider
-) : BasePresenter<ConverterView>(), LifecycleObserver {
+    override val schedulersProvider: SchedulersProvider
+) : BasePresenter<ConverterView>(schedulersProvider) {
 
     private var ratesDisposable: Disposable? = null
     private var currency = "RUB"
@@ -27,23 +23,6 @@ class ConverterPresenter @Inject constructor(
         super.onFirstViewAttach()
         viewState.showLoading(true)
         loadRates(currency, amount, true)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        ratesDisposable?.dispose()
-    }
-
-    @OnLifecycleEvent(ON_RESUME)
-    fun onViewStart() {
-        if (ratesDisposable?.isDisposed == true) {
-            loadRates(currency, amount, true)
-        }
-    }
-
-    @OnLifecycleEvent(ON_STOP)
-    fun onViewStop() {
-        ratesDisposable?.dispose()
     }
 
     fun onCurrencyOrAmountChanged(newCurrency: String, newAmount: Float) {
@@ -60,9 +39,9 @@ class ConverterPresenter @Inject constructor(
     private fun loadRates(currency: String, amount: Float, force: Boolean) {
         ratesDisposable?.dispose()
         ratesDisposable = interactor.getRates(currency, amount, force)
-                .subscribeOn(schedulersProvider.io())
-                .observeOn(schedulersProvider.mainThread())
-                .subscribe(this::onRatesLoaded)
+            .ioToMain()
+            .subscribe(::onRatesLoaded)
+            .unsubscribeOnDestroy()
     }
 
     private fun onRatesLoaded(rateList: RateList) {
