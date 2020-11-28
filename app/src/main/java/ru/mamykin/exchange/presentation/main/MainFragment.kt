@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.fragment_main.*
 import ru.mamykin.exchange.R
+import ru.mamykin.exchange.core.extension.reduceDragSensitivity
 import ru.mamykin.exchange.core.platform.BaseFragment
 
 /**
@@ -32,6 +33,7 @@ class MainFragment : BaseFragment() {
     private fun initViewPager() {
         viewpager.adapter = adapter
         viewpager.currentItem = 1
+        viewpager.reduceDragSensitivity()
         TabLayoutMediator(tablayout, viewpager) { tab, position ->
             tab.text = adapter.getTitle(position)
         }.attach()
