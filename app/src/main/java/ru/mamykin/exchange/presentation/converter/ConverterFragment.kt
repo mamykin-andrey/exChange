@@ -8,6 +8,7 @@ import ru.mamykin.exchange.R
 import ru.mamykin.exchange.core.di.Scopes
 import ru.mamykin.exchange.core.platform.BaseFragment
 import ru.mamykin.exchange.domain.entity.RateList
+import ru.mamykin.exchange.presentation.converter.list.CurrencyRatesRecyclerAdapter
 import toothpick.Toothpick
 
 /**

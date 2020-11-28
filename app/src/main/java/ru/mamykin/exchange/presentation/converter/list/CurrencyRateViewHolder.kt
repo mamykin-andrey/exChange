@@ -1,4 +1,4 @@
-package ru.mamykin.exchange.presentation.converter
+package ru.mamykin.exchange.presentation.converter.list
 
 import android.content.Context
 import android.view.View
@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_currency_rate.view.*
 import ru.mamykin.exchange.R
 import ru.mamykin.exchange.core.extension.onFocusedEvents
@@ -20,8 +21,8 @@ import java.util.concurrent.TimeUnit
  */
 class CurrencyRateViewHolder(
     private val context: Context,
-    itemView: View
-) : RecyclerView.ViewHolder(itemView) {
+    override val containerView: View
+) : RecyclerView.ViewHolder(containerView), LayoutContainer {
 
     companion object {
         private const val ICON_PREFIX = "cur_icon_"

@@ -1,17 +1,18 @@
-package ru.mamykin.exchange.presentation.converter
+package ru.mamykin.exchange.presentation.converter.list
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ListAdapter
 import ru.mamykin.exchange.R
 import ru.mamykin.exchange.domain.entity.Rate
 
 class CurrencyRatesRecyclerAdapter(
         private val context: Context,
         private val currencySelectedFunc: (String, Float) -> Unit
-) : RecyclerView.Adapter<CurrencyRateViewHolder>() {
-
+) : ListAdapter<Rate, CurrencyRateViewHolder>(
+    CurrencyRatesDiffUtilCallback()
+) {
     private var rates: List<Rate> = listOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CurrencyRateViewHolder {
