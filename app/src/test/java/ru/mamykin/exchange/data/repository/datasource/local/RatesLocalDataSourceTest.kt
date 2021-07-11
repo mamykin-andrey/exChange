@@ -3,7 +3,6 @@ package ru.mamykin.exchange.data.repository.datasource.local
 import org.junit.Before
 import org.junit.Test
 import ru.mamykin.exchange.data.repository.datasource.RatesDataSource
-import ru.mamykin.exchange.domain.entity.RateList
 import java.util.*
 
 class RatesLocalDataSourceTest {

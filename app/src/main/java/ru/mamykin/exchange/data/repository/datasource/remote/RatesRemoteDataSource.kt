@@ -4,7 +4,7 @@ import io.reactivex.Maybe
 import ru.mamykin.exchange.data.network.RatesApi
 import ru.mamykin.exchange.data.network.model.mapper.RateListResponseToRateListMapper
 import ru.mamykin.exchange.data.repository.datasource.RatesDataSource
-import ru.mamykin.exchange.domain.entity.RateList
+import ru.mamykin.exchange.domain.entity.RateEntity
 import javax.inject.Inject
 
 class RatesRemoteDataSource @Inject constructor(
@@ -12,13 +12,13 @@ class RatesRemoteDataSource @Inject constructor(
     private val mapper: RateListResponseToRateListMapper
 ) : RatesDataSource {
 
-    override fun getRates(baseCurrency: String): Maybe<RateList> {
-        return ratesApi.getRates(baseCurrency)
+    override fun getRates(): Maybe<List<RateEntity>> {
+        return ratesApi.getRates()
             .toMaybe()
             .map(mapper::transform)
     }
 
-    override fun cacheRates(rateList: RateList) {
-        TODO("Remote DataSource cannot perform this operation!")
+    override fun cacheRates(rates: List<RateEntity>) {
+        TODO("Remote DataSource doesn't support cache!")
     }
 }

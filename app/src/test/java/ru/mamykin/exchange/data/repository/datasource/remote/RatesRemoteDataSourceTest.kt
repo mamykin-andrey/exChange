@@ -12,8 +12,7 @@ import ru.mamykin.exchange.data.network.model.RateListResponse
 import ru.mamykin.exchange.data.network.model.mapper.RateListResponseToRateListMapper
 import ru.mamykin.exchange.data.network.RatesApi
 import ru.mamykin.exchange.data.repository.datasource.RatesDataSource
-import ru.mamykin.exchange.domain.entity.Rate
-import ru.mamykin.exchange.domain.entity.RateList
+import ru.mamykin.exchange.domain.entity.RateEntity
 import java.util.*
 
 class RatesRemoteDataSourceTest {
@@ -45,7 +44,7 @@ class RatesRemoteDataSourceTest {
         rateList = RateList(
                 TEST_CURRENCY,
                 today,
-                listOf(Rate("EUR", 0.0130f), Rate("USD", 0.0148f))
+                listOf(RateEntity("EUR", 0.0130f), RateEntity("USD", 0.0148f))
         )
     }
 

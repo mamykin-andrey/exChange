@@ -44,4 +44,6 @@
     <string name="currency_name_zar">Rand</string>
     <string name="currency_name_unknown">Unknown</string>
     <!-- END CURRENCY NAMES -->
+    <string name="error_network">Unable to load data, please try again</string>
+    <string name="error_retry_title">Retry</string>
 </resources>

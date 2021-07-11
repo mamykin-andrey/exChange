@@ -13,12 +13,10 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import ru.mamykin.exchange.TestSchedulerRule
-import ru.mamykin.exchange.core.extension.skip
 import ru.mamykin.exchange.core.rx.DefaultSchedulersProvider
 import ru.mamykin.exchange.data.repository.RatesRepository
 import ru.mamykin.exchange.domain.converter.ConverterInteractor
-import ru.mamykin.exchange.domain.entity.Rate
-import ru.mamykin.exchange.domain.entity.RateList
+import ru.mamykin.exchange.domain.entity.RateEntity
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -34,9 +32,9 @@ class ConverterInteractorTest {
     lateinit var ratesRepository: RatesRepository
 
     val todayDate = Date()
-    val rateList1 = RateList(RUB_CURRENCY, todayDate, listOf(Rate("USD", 0.015f)))
-    val rateList2 = RateList(RUB_CURRENCY, todayDate, listOf(Rate("EUR", 0.013f)))
-    val rateList3 = RateList(RUB_CURRENCY, todayDate, listOf(Rate("USD", 0.015f), Rate("EUR", 0.013f)))
+    val rateList1 = RateList(RUB_CURRENCY, todayDate, listOf(RateEntity("USD", 0.015f)))
+    val rateList2 = RateList(RUB_CURRENCY, todayDate, listOf(RateEntity("EUR", 0.013f)))
+    val rateList3 = RateList(RUB_CURRENCY, todayDate, listOf(RateEntity("USD", 0.015f), RateEntity("EUR", 0.013f)))
     lateinit var interactor: ConverterInteractor
 
     @Before
@@ -86,7 +84,7 @@ class ConverterInteractorTest {
 
     @Test
     fun getRates_shouldReturnCurrenciesAmountWithExchangeRate() {
-        val expectedRates = listOf(Rate("USD", 1.5f), Rate("EUR", 1.3000001f))
+        val expectedRates = listOf(RateEntity("USD", 1.5f), RateEntity("EUR", 1.3000001f))
         whenever(ratesRepository.getRates(RUB_CURRENCY, true)).thenReturn(Single.just(rateList3))
 
         val testObserver = interactor.getRates(RUB_CURRENCY, 100f, true).test()

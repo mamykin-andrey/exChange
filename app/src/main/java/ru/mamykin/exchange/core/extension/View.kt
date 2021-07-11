@@ -1,16 +1,24 @@
 package ru.mamykin.exchange.core.extension
 
+import android.app.Activity
+import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import io.reactivex.Observable
 
-fun EditText.onFocusedEvents(): Observable<Boolean> {
+fun EditText.focusChanges(): Observable<Boolean> {
     return Observable.create { emitter ->
-        this.setOnFocusChangeListener { view, focused ->
-            if (focused) emitter.onNext(true)
+        setOnFocusChangeListener { _, focused ->
+            if (!emitter.isDisposed) {
+                emitter.onNext(focused)
+            }
+        }
+        emitter.setCancellable {
+            onFocusChangeListener = null
         }
     }
 }
@@ -47,4 +55,12 @@ fun ViewPager2.reduceSwipeSensitivity() {
     touchSlopField.isAccessible = true
     val touchSlop = touchSlopField.get(recyclerView) as Int
     touchSlopField.set(recyclerView, touchSlop * 4)
+}
+
+fun Context.hideSoftKeyboard() {
+    val activity = this as? Activity ?: return
+    activity.window?.currentFocus?.let {
+        val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(it.windowToken, 0)
+    }
 }

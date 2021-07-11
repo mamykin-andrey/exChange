@@ -11,7 +11,6 @@ import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import ru.mamykin.exchange.data.repository.datasource.RatesDataSource
 import ru.mamykin.exchange.data.repository.datasource.RatesDataSourceFactory
-import ru.mamykin.exchange.domain.entity.RateList
 import java.util.*
 
 class RatesRepositoryTest {

@@ -1,11 +1,11 @@
 package ru.mamykin.exchange.data.repository.datasource
 
 import io.reactivex.Maybe
-import ru.mamykin.exchange.domain.entity.RateList
+import ru.mamykin.exchange.domain.entity.RateEntity
 
 interface RatesDataSource {
 
-    fun getRates(baseCurrency: String): Maybe<RateList>
+    fun getRates(): Maybe<List<RateEntity>>
 
-    fun cacheRates(rateList: RateList)
+    fun cacheRates(rates: List<RateEntity>)
 }

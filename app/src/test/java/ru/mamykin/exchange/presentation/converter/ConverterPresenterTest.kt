@@ -7,7 +7,6 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import ru.mamykin.exchange.TestSchedulersProvider
-import ru.mamykin.exchange.domain.entity.RateList
 import ru.mamykin.exchange.domain.converter.ConverterInteractor
 import java.util.*
 

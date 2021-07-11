@@ -8,9 +8,12 @@ import ru.mamykin.exchange.data.network.model.RateListResponse
 interface RatesApi {
 
     companion object {
-        const val BASE_URL = "https://api.exchangeratesapi.io"
+        const val BASE_URL = "http://api.exchangeratesapi.io/"
     }
 
-    @GET("latest")
-    fun getRates(@Query("base") baseCurrency: String): Single<RateListResponse>
+    @GET("v1/latest")
+    fun getRates(
+        @Query("access_key") key: String = "873c7a26942fbb76c7e15a4e0fffab8e",
+        @Query("format") format: String = "1"
+    ): Single<RateListResponse>
 }

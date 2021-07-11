@@ -5,8 +5,7 @@ import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Test
 import ru.mamykin.exchange.data.network.model.RateListResponse
-import ru.mamykin.exchange.domain.entity.Rate
-import ru.mamykin.exchange.domain.entity.RateList
+import ru.mamykin.exchange.domain.entity.RateEntity
 import java.util.*
 
 class RateListResponseToRateListMapperTest {
@@ -29,7 +28,7 @@ class RateListResponseToRateListMapperTest {
         val expectedRateList = RateList(
                 "EUR",
                 today,
-                listOf(Rate("RUB", 77.0f), Rate("USD", 1.14f))
+                listOf(RateEntity("RUB", 77.0f), RateEntity("USD", 1.14f))
         )
 
         val rateList = mapper.transform(rateListResponse)
