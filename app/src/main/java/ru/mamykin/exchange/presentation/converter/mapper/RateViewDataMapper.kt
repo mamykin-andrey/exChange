@@ -6,6 +6,7 @@ import ru.mamykin.exchange.core.platform.UiUtils
 import ru.mamykin.exchange.domain.entity.RateEntity
 import ru.mamykin.exchange.presentation.converter.viewdata.RateViewData
 import java.math.BigDecimal
+import java.util.Locale
 import javax.inject.Inject
 
 class RateViewDataMapper @Inject constructor(
@@ -13,8 +14,9 @@ class RateViewDataMapper @Inject constructor(
 ) {
     companion object {
         private const val ICON_PREFIX = "cur_icon_"
-        private const val DEFAULT_ICON = R.drawable.cur_icon_unknown
     }
+
+    private val defaultIcon = R.drawable.cur_icon_unknown
 
     fun transform(entities: List<RateEntity>): List<RateViewData> {
         return entities.map {
@@ -36,8 +38,8 @@ class RateViewDataMapper @Inject constructor(
         return UiUtils.getDrawableResId(
             context,
             ICON_PREFIX,
-            currencyCode.toLowerCase(),
-            DEFAULT_ICON
+            currencyCode.lowercase(),
+            defaultIcon
         )
     }
 }

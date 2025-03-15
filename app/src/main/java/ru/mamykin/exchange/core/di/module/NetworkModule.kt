@@ -8,7 +8,7 @@ import toothpick.config.Module
 
 class NetworkModule : Module() {
     init {
-        bind(OkHttpClient::class.java).toProvider(OkHttpClientProvider::class.java).singletonInScope()
-        bind(RatesApi::class.java).toProvider(RatesApiProvider::class.java).singletonInScope()
+        bind(OkHttpClient::class.java).toProvider(OkHttpClientProvider::class.java).singleton()
+        bind(RatesApi::class.java).toProvider(RatesApiProvider::class.java).singleton()
     }
 }

@@ -10,11 +10,11 @@ import toothpick.config.Module
 class DataSourceModule : Module() {
     init {
         bind(RatesDataSource::class.java)
-                .withName(LocalDataSource::class.java)
-                .to(RatesLocalDataSource::class.java)
+            .withName(LocalDataSource::class.java)
+            .to(RatesLocalDataSource::class.java)
 
         bind(RatesDataSource::class.java)
-                .withName(RemoteDataSource::class.java)
-                .to(RatesRemoteDataSource::class.java)
+            .withName(RemoteDataSource::class.java)
+            .to(RatesRemoteDataSource::class.java)
     }
 }
