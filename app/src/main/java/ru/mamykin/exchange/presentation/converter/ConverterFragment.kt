@@ -1,6 +1,7 @@
 package ru.mamykin.exchange.presentation.converter
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
@@ -19,26 +20,9 @@ class ConverterFragment : BaseFragment(R.layout.fragment_converter) {
 
     private val viewModel by viewModel<ConverterViewModel>()
     private val binding by viewBinding { FragmentConverterBinding.bind(requireView()) }
-    private var focusedCurrencyCode = ""
 
     private val adapter by lazy {
-        CurrencyRatesRecyclerAdapter(
-            ::onFocusChanged,
-            ::onAmountChanged
-        ).apply {
-            // TODO: ???
-//            setHasStableIds(true)
-        }
-    }
-
-    private fun onFocusChanged(code: String, amount: Float) = binding.apply {
-        focusedCurrencyCode = code
-        rvRates.scrollToPosition(0)
-        viewModel.onCurrencyOrAmountChanged(code, amount)
-    }
-
-    private fun onAmountChanged(code: String, amount: Float) = binding.apply {
-        viewModel.onCurrencyOrAmountChanged(code, amount)
+        CurrencyRatesRecyclerAdapter(viewModel::onCurrencyOrAmountChanged)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -51,6 +35,11 @@ class ConverterFragment : BaseFragment(R.layout.fragment_converter) {
         viewModel.isLoading.observe { showLoading(it) }
         viewModel.rates.observe { showRates(it) }
         viewModel.error.observe { showError(it) }
+        viewModel.currentRateChanged.observe {
+            Handler().post {
+                binding.rvRates.scrollToPosition(0)
+            }
+        }
     }
 
     private fun initRatesList() = binding.apply {
@@ -67,8 +56,8 @@ class ConverterFragment : BaseFragment(R.layout.fragment_converter) {
 
     private fun showLoading(show: Boolean) = binding.apply {
         vLoadingError.root.isVisible = false
-        rvRates.isVisible = false
-        pbLoading.isVisible = false
+        rvRates.isVisible = !show
+        pbLoading.isVisible = show
     }
 
 

@@ -5,8 +5,6 @@ import ru.mamykin.exchange.R
 import ru.mamykin.exchange.core.platform.UiUtils
 import ru.mamykin.exchange.domain.entity.RateEntity
 import ru.mamykin.exchange.presentation.converter.viewdata.RateViewData
-import java.math.BigDecimal
-import java.util.Locale
 import javax.inject.Inject
 
 class RateViewDataMapper @Inject constructor(
@@ -18,20 +16,15 @@ class RateViewDataMapper @Inject constructor(
 
     private val defaultIcon = R.drawable.cur_icon_unknown
 
-    fun transform(entities: List<RateEntity>): List<RateViewData> {
+    fun transform(entities: List<RateEntity>, currentCurrencyCode: String?): List<RateViewData> {
         return entities.map {
             RateViewData(
-                it.code,
-                mapAmount(it.amount),
-                mapIcon(it.code)
+                code = it.code,
+                amount = it.amount,
+                icon = mapIcon(it.code),
+                isCurrent = it.code == currentCurrencyCode,
             )
         }
-    }
-
-    private fun mapAmount(amount: Float): String {
-        return BigDecimal(amount.toDouble())
-            .setScale(2, BigDecimal.ROUND_HALF_UP)
-            .toString()
     }
 
     private fun mapIcon(currencyCode: String): Int {

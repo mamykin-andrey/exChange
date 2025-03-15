@@ -20,45 +20,50 @@ class ConverterViewModel @Inject constructor(
 ) : BaseViewModel(schedulersProvider) {
 
     private var ratesDisposable: Disposable? = null
-    private var currency = "RUB"
-    private var amount = 1.0f
+    private var currentCurrencyCode: String? = null
+    private var currentAmount: Float? = null
 
     val isLoading = MutableLiveData(true)
     val rates = MutableLiveData<List<RateViewData>>()
     val error = MutableLiveData<String>()
+    val currentRateChanged = MutableLiveData<Unit>()
 
     fun startRatesLoading() {
-        loadRates(currency, amount, true)
+        loadRates(null, null, true)
     }
 
     fun stopRatesLoading() {
         ratesDisposable?.dispose()
     }
 
-    fun onCurrencyOrAmountChanged(newCurrency: String, newAmount: Float) {
-        // TODO:
-//        if (!interactor.needRecalculate(newCurrency, currency, newAmount, amount))
-//            return
+    fun onCurrencyOrAmountChanged(currencyCode: String, amount: Float) {
+        if (currencyCode == currentCurrencyCode && amount == currentAmount) return
 
-        val currencyChanged = newCurrency != currency
-        loadRates(newCurrency, newAmount, currencyChanged).also {
-            this.currency = newCurrency
-            this.amount = newAmount
-        }
+        val currencyChanged = currencyCode != currentCurrencyCode
+        this.currentCurrencyCode = currencyCode
+        this.currentAmount = amount
+        loadRates(currentCurrencyCode, currentAmount, currencyChanged)
     }
 
-    private fun loadRates(currency: String, amount: Float, force: Boolean) {
+    private fun loadRates(
+        currentCurrency: String?,
+        currentCurrencyAmount: Float?,
+        currencyChanged: Boolean,
+    ) {
         ratesDisposable?.dispose()
-        ratesDisposable = interactor.getRates(currency, amount, force)
+        ratesDisposable = interactor.getRates(currentCurrency, currentCurrencyAmount, currencyChanged)
             .ioToMain()
             .doOnEach { isLoading.value = false }
-            .subscribe(::onRatesLoaded)
+            .subscribe { onRatesLoaded(it, currencyChanged) }
             .unsubscribeOnDestroy()
     }
 
-    private fun onRatesLoaded(result: Result<List<RateEntity>>) {
+    private fun onRatesLoaded(result: Result<List<RateEntity>>, currencyChanged: Boolean) {
         if (result is Result.Success) {
-            rates.value = mapViewData.transform(result.value)
+            rates.value = mapViewData.transform(result.value, currentCurrencyCode)
+            if (currencyChanged) {
+                currentRateChanged.value = Unit
+            }
         } else if (result is Result.Error) {
             error.value = mapError(result.throwable)
             ratesDisposable?.dispose()

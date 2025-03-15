@@ -11,7 +11,6 @@ import org.mockito.MockitoAnnotations
 import ru.mamykin.exchange.data.network.model.RateListResponse
 import ru.mamykin.exchange.data.network.model.mapper.RateListResponseToRateListMapper
 import ru.mamykin.exchange.data.network.RatesApi
-import ru.mamykin.exchange.data.repository.datasource.RatesDataSource
 import ru.mamykin.exchange.domain.entity.RateEntity
 import java.util.*
 

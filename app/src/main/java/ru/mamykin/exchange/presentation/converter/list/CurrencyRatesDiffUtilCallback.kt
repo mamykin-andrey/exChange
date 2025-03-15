@@ -1,7 +1,6 @@
 package ru.mamykin.exchange.presentation.converter.list
 
 import androidx.recyclerview.widget.DiffUtil
-import ru.mamykin.exchange.presentation.converter.ConverterFragment
 import ru.mamykin.exchange.presentation.converter.viewdata.RateViewData
 
 class CurrencyRatesDiffUtilCallback : DiffUtil.ItemCallback<RateViewData>() {

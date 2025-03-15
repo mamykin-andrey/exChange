@@ -41,7 +41,7 @@ class ConverterInteractorTest {
     fun setUp() {
         MockitoAnnotations.initMocks(this)
         interactor = ConverterInteractor(ratesRepository, DefaultSchedulersProvider())
-        whenever(ratesRepository.getRates(RUB_CURRENCY, true))
+        whenever(ratesRepository.getRates(true))
                 .thenReturn(Single.just(rateList1), Single.just(rateList2))
     }
 
@@ -62,7 +62,7 @@ class ConverterInteractorTest {
 
     @Test
     fun getRates_shouldDoesNotStopUpdates_whenErrorOccurs() {
-        whenever(ratesRepository.getRates(RUB_CURRENCY, true)).thenReturn(
+        whenever(ratesRepository.getRates(true)).thenReturn(
                 Single.just(rateList1),
                 Single.error(RuntimeException()),
                 Single.just(rateList2)
@@ -85,7 +85,7 @@ class ConverterInteractorTest {
     @Test
     fun getRates_shouldReturnCurrenciesAmountWithExchangeRate() {
         val expectedRates = listOf(RateEntity("USD", 1.5f), RateEntity("EUR", 1.3000001f))
-        whenever(ratesRepository.getRates(RUB_CURRENCY, true)).thenReturn(Single.just(rateList3))
+        whenever(ratesRepository.getRates(true)).thenReturn(Single.just(rateList3))
 
         val testObserver = interactor.getRates(RUB_CURRENCY, 100f, true).test()
         testSchedulerRule.testScheduler.advanceTimeBy(0, TimeUnit.SECONDS)

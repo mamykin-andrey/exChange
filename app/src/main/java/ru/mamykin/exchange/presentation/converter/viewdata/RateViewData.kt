@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 
 data class RateViewData(
     val code: String,
-    val amount: String,
-    @DrawableRes val icon: Int
+    val amount: Float,
+    @DrawableRes val icon: Int,
+    val isCurrent: Boolean,
 )

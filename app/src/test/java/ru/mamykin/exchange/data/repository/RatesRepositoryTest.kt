@@ -9,8 +9,6 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import ru.mamykin.exchange.data.repository.datasource.RatesDataSource
-import ru.mamykin.exchange.data.repository.datasource.RatesDataSourceFactory
 import java.util.*
 
 class RatesRepositoryTest {
@@ -47,7 +45,7 @@ class RatesRepositoryTest {
         whenever(localDataSource.getRates(RUB_CURRENCY)).thenReturn(Maybe.just(rateList1))
         whenever(remoteDataSource.getRates(RUB_CURRENCY)).thenReturn(Maybe.just(rateList2))
 
-        val testObserver = repository.getRates(RUB_CURRENCY, true).test()
+        val testObserver = repository.getRates(true).test()
 
         testObserver.assertNoErrors().assertValue(rateList2)
         verify(remoteDataSource).getRates(RUB_CURRENCY)
@@ -59,7 +57,7 @@ class RatesRepositoryTest {
         whenever(localDataSource.getRates(RUB_CURRENCY)).thenReturn(Maybe.empty())
         whenever(remoteDataSource.getRates(RUB_CURRENCY)).thenReturn(Maybe.just(rateList1))
 
-        val testObserver = repository.getRates(RUB_CURRENCY, false).test()
+        val testObserver = repository.getRates(false).test()
 
         testObserver.assertNoErrors().assertValue(rateList1)
         inOrder(localDataSource, remoteDataSource) {
@@ -72,7 +70,7 @@ class RatesRepositoryTest {
     fun getRates_shouldCacheData_whenDataHasSuccessfulLoaded() {
         whenever(remoteDataSource.getRates(RUB_CURRENCY)).thenReturn(Maybe.just(rateList2))
 
-        val testObserver = repository.getRates(RUB_CURRENCY, true).test()
+        val testObserver = repository.getRates(true).test()
 
         testObserver.assertNoErrors().assertValue(rateList2)
         verify(localDataSource).cacheRates(rateList2)

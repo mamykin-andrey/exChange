@@ -13,7 +13,8 @@ interface RatesApi {
 
     @GET("v1/latest")
     fun getRates(
-        @Query("access_key") key: String = "873c7a26942fbb76c7e15a4e0fffab8e",
-        @Query("format") format: String = "1"
+        @Query("access_key") key: String = "e5adf722e91b17a2e5394620b5a72a92",
+        @Query("format") format: String = "1",
+        @Query("symbols") requestedCurrencyCodes: String = "RUB,EUR,USD,JPY",
     ): Single<RateListResponse>
 }

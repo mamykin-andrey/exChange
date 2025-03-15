@@ -13,44 +13,52 @@ class ConverterInteractor @Inject constructor(
     private val schedulersProvider: SchedulersProvider
 ) {
     companion object {
-        private const val MONEY_DIFF_PRECISION = 0.001f
+        private const val API_BASE_CURRENCY_CODE = "EUR" // limitations of the API free plan
     }
 
-    fun getRates(currency: String, amount: Float, force: Boolean): Observable<Result<List<RateEntity>>> {
-        // TODO: use currency
+    /**
+     * @param baseCode code of the currency, which is used to calculate the exchange rates for all other currencies
+     * @param baseAmount amount of the currency, which is used to calculate the exchange rates for all other currencies
+     * @return exchange rates calculated to the current currency, if it's not provided, then EUR will be used
+     */
+    // TODO: Replace with CurrencyRate model
+    fun getRates(
+        baseCode: String?,
+        baseAmount: Float?,
+        currencyChanged: Boolean
+    ): Observable<Result<List<RateEntity>>> {
         return Observable.interval(0, 10_000, TimeUnit.SECONDS, schedulersProvider.io())
-            .flatMapSingle { ratesRepository.getRates(force) }
-            .map { calculateExchangeRate(it, amount) }
-            .map { moveCurrentCurrencyToTop(it, currency) }
+            .flatMapSingle { ratesRepository.getRates(currencyChanged) }
+            .map { calculateExchangeRate(it, baseCode, baseAmount) }
+            .map { moveCurrentCurrencyToTop(it, baseCode) }
             .map { Result.success(it) }
             .onErrorReturn { Result.error(it) }
     }
 
-    private fun calculateExchangeRate(original: List<RateEntity>, sourceAmount: Float): List<RateEntity> {
-        // TODO:
-        return original
-//        return RateList(original.base, original.date, original.rates.map {
-//            Rate(it.code, sourceAmount * it.amount)
-//        })
+    private fun calculateExchangeRate(
+        rates: List<RateEntity>,
+        baseCode: String?,
+        baseAmount: Float?
+    ): List<RateEntity> {
+        if (baseAmount == null) return rates
+
+        val toApiBaseExchangeRate = 1 / rates.find { it.code == baseCode }!!.amount
+        return rates.map { currency ->
+            val toCurrencyExchangeRate = rates.find { it.code == currency.code }!!.amount
+            if (currency.code == baseCode) currency.copy(amount = baseAmount)
+            else currency.copy(amount = toApiBaseExchangeRate * toCurrencyExchangeRate * baseAmount)
+        }
     }
 
-    private fun moveCurrentCurrencyToTop(rates: List<RateEntity>, currencyCode: String): List<RateEntity> {
-        // TODO:
-        return rates
-//        val sortedRates = rateList.rates.sortedWith { o1, o2 ->
-//            if (o1.code == currencyCode) return@sortedWith -1
-//            if (o2.code == currencyCode) return@sortedWith 1
-//            return@sortedWith 0
-//        }
-//        return rateList.copy(rates = sortedRates)
-    }
+    private fun moveCurrentCurrencyToTop(
+        rates: List<RateEntity>,
+        currentCurrency: String?,
+    ): List<RateEntity> {
+        val currentCurrency = currentCurrency ?: API_BASE_CURRENCY_CODE
 
-    fun needRecalculate(
-        oldCode: String,
-        newCode: String,
-        oldAmount: Float,
-        newAmount: Float
-    ): Boolean {
-        return oldCode != newCode || Math.abs(oldAmount - newAmount) > MONEY_DIFF_PRECISION
+        val currentRate = rates.find { it.code == currentCurrency }
+        if (currentRate == null) return rates
+
+        return listOf(currentRate) + rates.filter { it.code != currentCurrency }
     }
 }

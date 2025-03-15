@@ -8,8 +8,7 @@ import ru.mamykin.exchange.databinding.ItemCurrencyRateBinding
 import ru.mamykin.exchange.presentation.converter.viewdata.RateViewData
 
 class CurrencyRatesRecyclerAdapter(
-    private val focusChanged: (String, Float) -> Unit,
-    private val amountChanged: (String, Float) -> Unit
+    private val onCurrencyOrAmountChanged: (code: String, amount: Float) -> Unit,
 ) : ListAdapter<RateViewData, CurrencyRateViewHolder>(
     CurrencyRatesDiffUtilCallback()
 ) {
@@ -17,19 +16,25 @@ class CurrencyRatesRecyclerAdapter(
         val itemView =
             LayoutInflater.from(parent.context).inflate(R.layout.item_currency_rate, parent, false)
         val binding = ItemCurrencyRateBinding.bind(itemView)
-        return CurrencyRateViewHolder(
-            binding,
-            { focusChanged(getItem(it).code, 0f) }, // TODO:
-            { pos, amount -> amountChanged(getItem(pos).code, amount.toFloat()) }
-        )
+        return CurrencyRateViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: CurrencyRateViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), onCurrencyOrAmountChanged)
     }
 
-    // TODO: ???
-//    override fun getItemId(position: Int): Long {
-//        return getItem(position).code.hashCode().toLong()
-//    }
+    override fun onViewRecycled(holder: CurrencyRateViewHolder) {
+        super.onViewRecycled(holder)
+        holder.unbind()
+    }
+
+    override fun onFailedToRecycleView(holder: CurrencyRateViewHolder): Boolean {
+        holder.unbind()
+        return super.onFailedToRecycleView(holder)
+    }
+
+    override fun onViewDetachedFromWindow(holder: CurrencyRateViewHolder) {
+        holder.unbind()
+        super.onViewDetachedFromWindow(holder)
+    }
 }
