@@ -11,17 +11,29 @@ internal class RateViewDataMapper @Inject constructor(
 ) {
     companion object {
         private const val ICON_PREFIX = "cur_icon_"
+        private const val AMOUNT_FORMAT = "%.2f"
     }
 
     private val defaultIcon = R.drawable.cur_icon_unknown
 
-    fun transform(entities: List<RateEntity>, currentCurrencyCode: String?): List<RateViewData> {
+    fun transform(
+        entities: List<RateEntity>,
+        currentCurrencyRate: CurrentCurrencyRate? = null,
+    ): List<CurrencyRateViewData> {
         return entities.map {
-            RateViewData(
+            val formattedAmount = if (it.code == currentCurrencyRate?.code)
+                currentCurrencyRate.amountStr
+            else
+                AMOUNT_FORMAT.format(it.amount)
+            val selectionPosition = if (it.code == currentCurrencyRate?.code) {
+                currentCurrencyRate.selectionPosition
+            } else
+                null
+            CurrencyRateViewData(
                 code = it.code,
-                amount = it.amount,
+                amountStr = formattedAmount,
                 icon = mapIcon(it.code),
-                isCurrent = it.code == currentCurrencyCode,
+                selectionPosition = selectionPosition,
             )
         }
     }

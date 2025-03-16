@@ -2,9 +2,9 @@ package ru.mamykin.exchange.presentation
 
 import androidx.annotation.DrawableRes
 
-internal data class RateViewData(
+internal data class CurrencyRateViewData(
     val code: String,
-    val amount: Float,
+    val amountStr: String,
     @DrawableRes val icon: Int,
-    val isCurrent: Boolean,
+    val selectionPosition: Int? = null,
 )

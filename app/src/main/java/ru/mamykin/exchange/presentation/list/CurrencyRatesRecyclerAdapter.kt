@@ -5,11 +5,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import ru.mamykin.exchange.R
 import ru.mamykin.exchange.databinding.ItemCurrencyRateBinding
-import ru.mamykin.exchange.presentation.RateViewData
+import ru.mamykin.exchange.presentation.CurrencyRateViewData
+import ru.mamykin.exchange.presentation.CurrentCurrencyRate
 
 internal class CurrencyRatesRecyclerAdapter(
-    private val onCurrencyOrAmountChanged: (code: String, amount: Float) -> Unit,
-) : ListAdapter<RateViewData, CurrencyRateViewHolder>(
+    private val onCurrencyOrAmountChanged: (currentCurrency: CurrentCurrencyRate) -> Unit,
+) : ListAdapter<CurrencyRateViewData, CurrencyRateViewHolder>(
     CurrencyRatesDiffUtilCallback()
 ) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CurrencyRateViewHolder {

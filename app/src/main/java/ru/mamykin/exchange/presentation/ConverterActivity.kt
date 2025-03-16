@@ -75,7 +75,7 @@ internal class ConverterActivity : AppCompatActivity() {
     }
 
 
-    private fun showRates(rates: List<RateViewData>) = binding.apply {
+    private fun showRates(rates: List<CurrencyRateViewData>) = binding.apply {
         pbLoading.isVisible = false
         vLoadingError.root.isVisible = false
         rvRates.isVisible = true

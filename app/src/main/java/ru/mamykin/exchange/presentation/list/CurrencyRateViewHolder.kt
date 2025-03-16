@@ -6,21 +6,18 @@ import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import ru.mamykin.exchange.databinding.ItemCurrencyRateBinding
-import ru.mamykin.exchange.presentation.RateViewData
+import ru.mamykin.exchange.presentation.CurrencyRateViewData
+import ru.mamykin.exchange.presentation.CurrentCurrencyRate
 
 internal class CurrencyRateViewHolder(
     private val binding: ItemCurrencyRateBinding,
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    companion object {
-        private const val AMOUNT_FORMAT = "%.2f"
-    }
-
     private var amountTextWatcher: TextWatcher? = null
 
     fun bind(
-        viewData: RateViewData,
-        onCurrencyOrAmountChanged: (code: String, amount: Float) -> Unit,
+        viewData: CurrencyRateViewData,
+        onCurrencyOrAmountChanged: (currentCurrency: CurrentCurrencyRate) -> Unit,
     ) {
         binding.textCurrencyCode.text = viewData.code
         bindAmount(viewData)
@@ -34,23 +31,35 @@ internal class CurrencyRateViewHolder(
         amountTextWatcher = null
     }
 
-    private fun bindAmount(viewData: RateViewData) = binding.apply {
-        binding.editExchangeAmount.setText(AMOUNT_FORMAT.format(viewData.amount))
+    private fun bindAmount(viewData: CurrencyRateViewData) = binding.apply {
+        binding.editExchangeAmount.setText(viewData.amountStr)
+        viewData.selectionPosition?.let(binding.editExchangeAmount::setSelection)
     }
 
     private fun subscribeToEvents(
-        viewData: RateViewData,
-        onCurrencyOrAmountChanged: (code: String, amount: Float) -> Unit,
+        viewData: CurrencyRateViewData,
+        onCurrencyOrAmountChanged: (currentCurrency: CurrentCurrencyRate) -> Unit,
     ) {
         binding.editExchangeAmount.setOnFocusChangeListener { _, focused ->
             if (focused) {
-                onCurrencyOrAmountChanged(viewData.code, viewData.amount)
+                onCurrencyOrAmountChanged(
+                    CurrentCurrencyRate(
+                        code = viewData.code,
+                        amountStr = viewData.amountStr,
+                    )
+                )
             }
         }
         amountTextWatcher = binding.editExchangeAmount.addTextChangedListener {
             val newText = it.toString()
-            if (newText.isNotBlank()) {
-                onCurrencyOrAmountChanged(viewData.code, newText.toFloat())
+            if (binding.editExchangeAmount.isFocused && newText.isNotBlank()) {
+                onCurrencyOrAmountChanged(
+                    CurrentCurrencyRate(
+                        code = viewData.code,
+                        amountStr = newText,
+                        selectionPosition = binding.editExchangeAmount.selectionEnd
+                    )
+                )
             }
         }
     }

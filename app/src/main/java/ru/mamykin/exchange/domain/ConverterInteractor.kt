@@ -4,6 +4,7 @@ import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.schedulers.Schedulers
 import ru.mamykin.exchange.data.RatesRepository
+import ru.mamykin.exchange.presentation.CurrentCurrencyRate
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -16,23 +17,21 @@ internal class ConverterInteractor(
 
     companion object {
         private const val API_BASE_CURRENCY_CODE = "EUR" // limitations of the API free plan
+        private const val EXCHANGE_UPDATE_PERIOD_MS = 30_000L
     }
 
     /**
-     * @param baseCode code of the currency, which is used to calculate the exchange rates for all other currencies
-     * @param baseAmount amount of the currency, which is used to calculate the exchange rates for all other currencies
+     * @param currentCurrency code and amount of the currency, which is used to calculate the exchange rates for all other currencies
      * @return exchange rates calculated to the current currency, if it's not provided, then EUR will be used
      */
-    // TODO: Replace with CurrencyRate model
     fun getRates(
-        baseCode: String?,
-        baseAmount: Float?,
-        currencyChanged: Boolean
+        currentCurrency: CurrentCurrencyRate?,
+        currencyChanged: Boolean,
     ): Observable<Result<List<RateEntity>>> {
-        return Observable.interval(0, 10_000, TimeUnit.SECONDS, ioScheduler)
+        return Observable.interval(0, EXCHANGE_UPDATE_PERIOD_MS, TimeUnit.SECONDS, ioScheduler)
             .flatMapSingle { ratesRepository.getRates(currencyChanged) }
-            .map { calculateExchangeRate(it, baseCode, baseAmount) }
-            .map { moveCurrentCurrencyToTop(it, baseCode) }
+            .map { calculateExchangeRate(it, currentCurrency?.code, currentCurrency?.amountStr?.toFloat()) }
+            .map { moveCurrentCurrencyToTop(it, currentCurrency?.code) }
             .map { Result.success(it) }
             .onErrorReturn { Result.failure(it) }
     }
@@ -40,7 +39,7 @@ internal class ConverterInteractor(
     private fun calculateExchangeRate(
         rates: List<RateEntity>,
         baseCode: String?,
-        baseAmount: Float?
+        baseAmount: Float?,
     ): List<RateEntity> {
         if (baseAmount == null) return rates
 

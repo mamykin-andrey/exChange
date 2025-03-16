@@ -27,11 +27,10 @@ internal class ConverterViewModel(
 
     private val compositeDisposable = CompositeDisposable()
     private var ratesDisposable: Disposable? = null
-    private var currentCurrencyCode: String? = null
-    private var currentAmount: Float? = null
+    private var currentCurrency: CurrentCurrencyRate? = null
 
     val isLoading = MutableLiveData(true)
-    val rates = MutableLiveData<List<RateViewData>>()
+    val rates = MutableLiveData<List<CurrencyRateViewData>>()
     val error = MutableLiveData<Int>()
     val currentRateChanged = MutableLiveData<Unit>()
 
@@ -40,40 +39,43 @@ internal class ConverterViewModel(
     }
 
     fun startRatesLoading() {
-        loadRates(null, null, true)
+        loadRates(null, true)
     }
 
     fun stopRatesLoading() {
         ratesDisposable?.dispose()
     }
 
-    fun onCurrencyOrAmountChanged(currencyCode: String, amount: Float) {
-        if (currencyCode == currentCurrencyCode && amount == currentAmount) return
+    fun onCurrencyOrAmountChanged(currencyRate: CurrentCurrencyRate) {
+        currencyRate.amountStr.toFloatOrNull() ?: return
+        if (currencyRate.code == currentCurrency?.code && currencyRate.amountStr == currentCurrency?.amountStr) return
 
-        val currencyChanged = currencyCode != currentCurrencyCode
-        this.currentCurrencyCode = currencyCode
-        this.currentAmount = amount
-        loadRates(currentCurrencyCode, currentAmount, currencyChanged)
+        val currencyChanged = currencyRate.code != currentCurrency?.code
+        this.currentCurrency = currencyRate
+        loadRates(currencyRate, currencyChanged)
     }
 
     private fun loadRates(
-        currentCurrency: String?,
-        currentCurrencyAmount: Float?,
+        currentCurrency: CurrentCurrencyRate?,
         currencyChanged: Boolean,
     ) {
         ratesDisposable?.dispose()
-        ratesDisposable = interactor.getRates(currentCurrency, currentCurrencyAmount, currencyChanged)
+        ratesDisposable = interactor.getRates(currentCurrency, currencyChanged)
             .subscribeOn(ioScheduler)
             .observeOn(mainScheduler)
             .doOnEach { isLoading.value = false }
-            .subscribe { onRatesLoaded(it, currencyChanged) }
+            .subscribe { onRatesLoaded(it, currentCurrency, currencyChanged) }
             .unsubscribeOnDestroy()
     }
 
-    private fun onRatesLoaded(result: Result<List<RateEntity>>, currencyChanged: Boolean) {
+    private fun onRatesLoaded(
+        result: Result<List<RateEntity>>,
+        currentCurrency: CurrentCurrencyRate?,
+        currencyChanged: Boolean,
+    ) {
         result.fold(
             onSuccess = {
-                rates.value = mapViewData.transform(it, currentCurrencyCode)
+                rates.value = mapViewData.transform(it, currentCurrency)
                 if (currencyChanged) {
                     currentRateChanged.value = Unit
                 }
