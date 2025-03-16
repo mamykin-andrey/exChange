@@ -1,116 +1,72 @@
 package ru.mamykin.exchange.data
 
-import com.nhaarman.mockito_kotlin.inOrder
-import com.nhaarman.mockito_kotlin.times
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.whenever
-import io.reactivex.Maybe
+import io.reactivex.Single
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mock
-import org.mockito.MockitoAnnotations
-import java.util.*
+import org.mockito.Mockito.mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.whenever
+import ru.mamykin.exchange.data.network.RateListResponse
+import ru.mamykin.exchange.data.network.RatesApi
+import java.util.Date
 
 class RatesRepositoryTest {
 
-    companion object {
-        const val RUB_CURRENCY = "RUB"
-    }
-
-    @Mock
-    lateinit var localDataSource: RatesDataSource
-    @Mock
-    lateinit var remoteDataSource: RatesDataSource
-    @Mock
-    lateinit var dataSourceFactory: RatesDataSourceFactory
-
-    lateinit var rateList1: RateList
-    lateinit var rateList2: RateList
-    lateinit var repository: RatesRepository
+    private val ratesApi: RatesApi = mock()
+    private val rates1 = listOf(
+        "RUB" to 100f,
+        "USD" to 1f,
+    )
+    private val rates2 = listOf(
+        "RUB" to 100f,
+        "USD" to 0.9f,
+    )
+    private val ratesResponse1 = RateListResponse("EUR", Date(), rates1.toMap())
+    private val ratesResponse2 = RateListResponse("EUR", Date(), rates2.toMap())
+    private val repository = RatesRepository(ratesApi)
 
     @Before
     fun setUp() {
-        MockitoAnnotations.initMocks(this)
-        repository = RatesRepository(dataSourceFactory)
-        rateList1 = RateList(RUB_CURRENCY, Date(), listOf())
-        rateList2 = RateList("USD", Date(), listOf())
-        whenever(dataSourceFactory.createLocalDataSource()).thenReturn(localDataSource)
-        whenever(dataSourceFactory.createRemoteDataSource()).thenReturn(remoteDataSource)
-        whenever(dataSourceFactory.create(true)).thenReturn(remoteDataSource)
-        whenever(dataSourceFactory.create(false)).thenReturn(localDataSource)
+        whenever(ratesApi.getRates(any(), any(), any()))
+            .thenReturn(Single.just(ratesResponse1), Single.just(ratesResponse2))
     }
 
     @Test
-    fun getRates_shouldReturnDataFromRemoteDataSource_whenForceFlagIsTrue() {
-        whenever(localDataSource.getRates(RUB_CURRENCY)).thenReturn(Maybe.just(rateList1))
-        whenever(remoteDataSource.getRates(RUB_CURRENCY)).thenReturn(Maybe.just(rateList2))
-
-        val testObserver = repository.getRates(true).test()
-
-        testObserver.assertNoErrors().assertValue(rateList2)
-        verify(remoteDataSource).getRates(RUB_CURRENCY)
-        verify(localDataSource, times(0)).getRates(RUB_CURRENCY)
-    }
-
-    @Test
-    fun getRates_shouldSwitchToRemoteDataSource_whenForceFlagIsFalse_andLocalDataAreEmpty() {
-        whenever(localDataSource.getRates(RUB_CURRENCY)).thenReturn(Maybe.empty())
-        whenever(remoteDataSource.getRates(RUB_CURRENCY)).thenReturn(Maybe.just(rateList1))
-
+    fun `return data from remote when cache is empty`() {
         val testObserver = repository.getRates(false).test()
 
-        testObserver.assertNoErrors().assertValue(rateList1)
-        inOrder(localDataSource, remoteDataSource) {
-            verify(localDataSource).getRates(RUB_CURRENCY)
-            verify(remoteDataSource).getRates(RUB_CURRENCY)
+        testObserver.assertNoErrors().assertValue {
+            it.size == rates1.size
+                && it.first().let { it.code to it.amount } == rates1.first()
+                && it[1].let { it.code to it.amount } == rates1[1]
         }
     }
 
     @Test
-    fun getRates_shouldCacheData_whenDataHasSuccessfulLoaded() {
-        whenever(remoteDataSource.getRates(RUB_CURRENCY)).thenReturn(Maybe.just(rateList2))
+    fun `return data from cache when force is false`() {
+        // updates cache and uses rates/response 1
+        repository.getRates(false).test().assertComplete()
+
+        val testObserver = repository.getRates(false).test()
+
+        testObserver.assertNoErrors().assertValue {
+            it.size == rates1.size
+                && it.first().let { it.code to it.amount } == rates1.first()
+                && it[1].let { it.code to it.amount } == rates1[1]
+        }
+    }
+
+    @Test
+    fun `return data from remote when force is true`() {
+        // updates cache and uses rates/response 1
+        repository.getRates(false).test().assertComplete()
 
         val testObserver = repository.getRates(true).test()
 
-        testObserver.assertNoErrors().assertValue(rateList2)
-        verify(localDataSource).cacheRates(rateList2)
+        testObserver.assertNoErrors().assertValue {
+            it.size == rates2.size
+                && it.first().let { it.code to it.amount } == rates2.first()
+                && it[1].let { it.code to it.amount } == rates2[1]
+        }
     }
-
-    // @Test
-    //     fun getRates_returnRatesFromApi_whenApiRequestIsSuccess() {
-    //         whenever(ratesApi.getRates(TEST_CURRENCY)).thenReturn(Single.just(rateListResponse))
-    //         whenever(mapper.transform(rateListResponse)).thenReturn(rateList)
-    //
-    //         val testObserver = dataSource.getRates(TEST_CURRENCY).test()
-    //
-    //         testObserver.assertComplete().assertValue(rateList)
-    //         verify(mapper).transform(rateListResponse)
-    //     }
-    //
-    //     @Test
-    //     fun getRates_returnError_whenApiRequestIsFailed() {
-    //         whenever(ratesApi.getRates(TEST_CURRENCY)).thenReturn(Single.error(RuntimeException()))
-    //
-    //         val testObserver = dataSource.getRates(TEST_CURRENCY).test()
-    //
-    //         testObserver.assertNotComplete().assertError(RuntimeException::class.java)
-    //         verifyNoMoreInteractions(mapper)
-    //     }
-
-    // @Test
-    //     fun getRates_shouldReturnEmptyItem_inFirstTime() {
-    //         val testObserver = dataSource.getRates(RUB_CURRENCY).test()
-    //
-    //         testObserver.assertNoErrors().assertNoValues()
-    //     }
-    //
-    //     @Test
-    //     fun cacheRates_shouldSetLastRatesToNewValue() {
-    //         val rateList = RateList(RUB_CURRENCY, Date(), listOf())
-    //         dataSource.cacheRates(rateList)
-    //
-    //         val testObserver = dataSource.getRates(RUB_CURRENCY).test()
-    //
-    //         testObserver.assertNoErrors().assertValue(rateList)
-    //     }
 }

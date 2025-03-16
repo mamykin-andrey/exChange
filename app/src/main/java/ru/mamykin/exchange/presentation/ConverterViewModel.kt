@@ -16,7 +16,7 @@ internal class ConverterViewModel(
     private val interactor: ConverterInteractor,
     private val ioScheduler: Scheduler,
     private val mainScheduler: Scheduler,
-    private val mapViewData: RateViewDataMapper
+    private val viewDataMapper: RateViewDataMapper
 ) : ViewModel() {
 
     @Inject
@@ -63,7 +63,7 @@ internal class ConverterViewModel(
         ratesDisposable = interactor.getRates(currentCurrency, currencyChanged)
             .subscribeOn(ioScheduler)
             .observeOn(mainScheduler)
-            .doOnEach { isLoading.value = false }
+            .doOnEach { isLoading.postValue(false) }
             .subscribe { onRatesLoaded(it, currentCurrency, currencyChanged) }
             .unsubscribeOnDestroy()
     }
@@ -75,13 +75,13 @@ internal class ConverterViewModel(
     ) {
         result.fold(
             onSuccess = {
-                rates.value = mapViewData.transform(it, currentCurrency)
+                rates.postValue(viewDataMapper.transform(it, currentCurrency))
                 if (currencyChanged) {
-                    currentRateChanged.value = Unit
+                    currentRateChanged.postValue(Unit)
                 }
             },
             onFailure = {
-                error.value = R.string.error_network
+                error.postValue(R.string.error_network)
                 ratesDisposable?.dispose()
             },
         )
