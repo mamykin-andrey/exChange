@@ -41,7 +41,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.jetbrains.basicsample.shared"
+    namespace = "ru.mamykin.exchange.shared"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11

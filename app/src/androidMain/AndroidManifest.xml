@@ -19,7 +19,7 @@
 
         <activity
             android:name=".presentation.ConverterActivity"
-            android:screenOrientation="portrait"
+            android:exported="false"
             android:theme="@style/AppTheme.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

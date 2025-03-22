@@ -1,3 +1,6 @@
+rootProject.name = "kmm-basic-sample"
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
 pluginManagement {
     repositories {
         google {
@@ -25,8 +28,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "kmm-basic-sample"
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
-
-include ':app'
+include(":app")
 include(":shared")
