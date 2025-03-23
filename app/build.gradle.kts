@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -11,7 +10,6 @@ plugins {
 
 kotlin {
     androidTarget {
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
         }
@@ -36,10 +34,7 @@ kotlin {
             implementation("androidx.constraintlayout:constraintlayout:2.2.1")
             implementation("com.google.android.material:material:1.12.0")
             implementation("com.github.stephanenicolas.toothpick:ktp:3.1.0")
-            // "kapt"("com.github.stephanenicolas.toothpick:toothpick-compiler:3.1.0")
-            implementation("com.squareup.okhttp3:logging-interceptor:4.3.0")
             implementation("com.squareup.picasso:picasso:2.71828")
-            // implementation("androidx.core:core-ktx:1.15.0")
 
 //            testImplementation "junit:junit:4.13.2"
 //            testImplementation "org.mockito:mockito-core:5.10.0"

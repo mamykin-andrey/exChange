@@ -1,7 +1,6 @@
 package ru.mamykin.exchange.domain
 
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -9,15 +8,11 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import ru.mamykin.exchange.data.RatesRepository
 import ru.mamykin.exchange.presentation.CurrentCurrencyRate
-import javax.inject.Inject
 
-internal class ConverterInteractor(
+class ConverterInteractor(
     private val ratesRepository: RatesRepository,
     private val isDispatcher: CoroutineDispatcher,
 ) {
-    @Inject
-    constructor(ratesRepository: RatesRepository) : this(ratesRepository, Dispatchers.IO)
-
     companion object {
         private const val API_BASE_CURRENCY_CODE = "EUR" // limitations of the API free plan
         private const val EXCHANGE_UPDATE_PERIOD_MS = 30_000L
