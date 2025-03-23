@@ -3,9 +3,8 @@ package ru.mamykin.exchange.data
 import ru.mamykin.exchange.data.network.RateListResponse
 import ru.mamykin.exchange.data.network.RatesNetworkClient
 import ru.mamykin.exchange.domain.RateEntity
-import javax.inject.Inject
 
-internal class RatesRepository @Inject constructor(
+class RatesRepository(
     private val ratesNetworkClient: RatesNetworkClient,
 ) {
     private var lastRates: List<RateEntity>? = null
