@@ -13,8 +13,8 @@
 // import org.mockito.Mock
 // import org.mockito.MockitoAnnotations
 // import ru.mamykin.exchange.data.RatesRepository
-// import java.util.*
-// import java.util.concurrent.TimeUnit
+// import kotlin.util.*
+// import kotlin.util.concurrent.TimeUnit
 //
 // class ConverterInteractorTest {
 //
