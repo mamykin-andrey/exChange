@@ -7,7 +7,6 @@ import org.mockito.Mockito.mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import ru.mamykin.exchange.data.network.RateListResponse
-import ru.mamykin.exchange.data.network.RatesApi
 import java.util.Date
 
 class RatesRepositoryTest {

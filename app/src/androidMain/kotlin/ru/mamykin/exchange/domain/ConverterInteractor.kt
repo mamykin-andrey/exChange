@@ -1,19 +1,22 @@
 package ru.mamykin.exchange.domain
 
-import io.reactivex.Observable
-import io.reactivex.Scheduler
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import ru.mamykin.exchange.data.RatesRepository
 import ru.mamykin.exchange.presentation.CurrentCurrencyRate
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 internal class ConverterInteractor(
     private val ratesRepository: RatesRepository,
-    private val ioScheduler: Scheduler,
+    private val isDispatcher: CoroutineDispatcher,
 ) {
     @Inject
-    constructor(ratesRepository: RatesRepository) : this(ratesRepository, Schedulers.io())
+    constructor(ratesRepository: RatesRepository) : this(ratesRepository, Dispatchers.IO)
 
     companion object {
         private const val API_BASE_CURRENCY_CODE = "EUR" // limitations of the API free plan
@@ -21,20 +24,26 @@ internal class ConverterInteractor(
     }
 
     /**
-     * @param currentCurrency code and amount of the currency, which is used to calculate the exchange rates for all other currencies
+     * @param baseCurrency code and amount of the currency, which is used to calculate the exchange rates for all other currencies
      * @return exchange rates calculated to the current currency, if it's not provided, then EUR will be used
      */
     fun getRates(
-        currentCurrency: CurrentCurrencyRate?,
+        baseCurrency: CurrentCurrencyRate?,
         currencyChanged: Boolean,
-    ): Observable<Result<List<RateEntity>>> {
-        return Observable.interval(0, EXCHANGE_UPDATE_PERIOD_MS, TimeUnit.SECONDS, ioScheduler)
-            .flatMapSingle { ratesRepository.getRates(currencyChanged) }
-            .map { calculateExchangeRate(it, currentCurrency?.code, currentCurrency?.amountStr?.toFloat()) }
-            .map { moveCurrentCurrencyToTop(it, currentCurrency?.code) }
-            .map { Result.success(it) }
-            .onErrorReturn { Result.failure(it) }
-    }
+    ): Flow<Result<List<RateEntity>>> = flow {
+        while (true) {
+            val rates = ratesRepository.getRates(currencyChanged)
+            val calculatedRates = calculateExchangeRate(
+                rates,
+                baseCurrency?.code,
+                baseCurrency?.amountStr?.toFloat(),
+            )
+            val sortedRates = moveCurrentCurrencyToTop(calculatedRates, baseCurrency?.code)
+            emit(Result.success(sortedRates))
+            delay(EXCHANGE_UPDATE_PERIOD_MS)
+        }
+    }.catch { emit(Result.failure(it)) }
+        .flowOn(isDispatcher)
 
     private fun calculateExchangeRate(
         rates: List<RateEntity>,

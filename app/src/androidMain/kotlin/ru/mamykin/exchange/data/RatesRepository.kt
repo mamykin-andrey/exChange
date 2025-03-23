@@ -1,34 +1,31 @@
 package ru.mamykin.exchange.data
 
-import io.reactivex.Maybe
-import io.reactivex.Single
 import ru.mamykin.exchange.data.network.RateListResponse
-import ru.mamykin.exchange.data.network.RatesApi
+import ru.mamykin.exchange.data.network.RatesNetworkClient
 import ru.mamykin.exchange.domain.RateEntity
 import javax.inject.Inject
 
 internal class RatesRepository @Inject constructor(
-    private val ratesApi: RatesApi,
+    private val ratesNetworkClient: RatesNetworkClient,
 ) {
     private var lastRates: List<RateEntity>? = null
 
-    fun getRates(force: Boolean): Single<List<RateEntity>> {
+    suspend fun getRates(force: Boolean): List<RateEntity> {
         return if (force) {
             getRemoteRates()
         } else {
-            getCachedRates().switchIfEmpty(getRemoteRates())
-        }.toSingle()
+            getCachedRates() ?: getRemoteRates()
+        }
     }
 
-    private fun getRemoteRates(): Maybe<List<RateEntity>> {
-        return ratesApi.getRates()
-            .toMaybe()
-            .map(RateListResponse::toDomainModel)
-            .doOnSuccess(::cacheRates)
+    private suspend fun getRemoteRates(): List<RateEntity> {
+        return ratesNetworkClient.getRates()
+            .let(RateListResponse::toDomainModel)
+            .also { cacheRates(it) }
     }
 
-    private fun getCachedRates(): Maybe<List<RateEntity>> {
-        return if (lastRates == null) Maybe.empty() else Maybe.just(lastRates)
+    private fun getCachedRates(): List<RateEntity>? {
+        return lastRates
     }
 
     private fun cacheRates(rates: List<RateEntity>) {
