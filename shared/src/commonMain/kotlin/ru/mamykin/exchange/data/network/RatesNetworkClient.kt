@@ -17,7 +17,8 @@ class RatesNetworkClient {
         const val BASE_URL = "http://api.exchangeratesapi.io/"
     }
 
-    private val apiKey = ApiKey.VALUE
+    // private val apiKey = ApiKey.VALUE
+    private val apiKey = ""
     private val httpClient = HttpClient {
         install(ContentNegotiation) {
             json(Json {
