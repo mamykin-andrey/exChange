@@ -10,7 +10,7 @@ internal class AppModule(context: Context) : Module() {
     init {
         bind(Context::class.java).toInstance(context)
         bind(RatesNetworkClient::class.java).toInstance(RatesNetworkClient())
-        bind(RatesRepository::class.java)
+        bind(RatesRepository::class.java).toProvider(RatesRepositoryProvider::class.java)
         bind(ConverterInteractor::class.java).toProvider(ConverterInteractorProvider::class.java)
     }
 }
