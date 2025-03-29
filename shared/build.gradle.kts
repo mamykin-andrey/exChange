@@ -7,13 +7,6 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
-val localProperties = Properties()
-val localPropertiesFile = rootProject.file("local.properties")
-if (localPropertiesFile.exists()) {
-    localPropertiesFile.inputStream().use { localProperties.load(it) }
-}
-val apiKey = localProperties.getProperty("exchangeapikey") ?: ""
-
 kotlin {
     androidTarget {
         compilerOptions {
@@ -26,12 +19,6 @@ kotlin {
         iosArm64(),
         iosSimulatorArm64()
     )
-    //     .forEach { iosTarget ->
-    //     iosTarget.binaries.framework {
-    //         baseName = "Shared"
-    //         isStatic = true
-    //     }
-    // }
 
     sourceSets {
         androidMain.dependencies {
@@ -40,21 +27,22 @@ kotlin {
         }
         val commonMain by getting {
             kotlin.srcDir("$buildDir/generated/commonMain/kotlin")
+            dependencies {
+                implementation(libs.ktor.client.core)
+                implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.ktor.serialization.kotlinx.json)
+                implementation(libs.ktor.client.content.negotiation)
+                implementation(libs.ktor.client.logging)
+                implementation(libs.kotlinx.serialization.json)
+                implementation(libs.kotlinx.coroutines.test)
+                implementation(libs.mockk.common)
+            }
         }
-        commonMain.dependencies {
-            implementation(libs.ktor.client.core)
-            implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.ktor.serialization.kotlinx.json)
-            implementation(libs.ktor.client.content.negotiation)
-            implementation(libs.ktor.client.logging)
-            implementation(libs.kotlinx.serialization.json)
-            implementation(libs.kotlinx.coroutines.test)
-            implementation(libs.mockk.common)
+        val commonTest by getting {
+            dependencies {
+                implementation(kotlin("test"))
+            }
         }
-        commonTest.dependencies {
-            implementation(kotlin("test"))
-        }
-        val commonTest by getting
         val androidUnitTest by getting {
             dependencies {
                 implementation(libs.junit)
@@ -63,30 +51,36 @@ kotlin {
         }
         val iosMain by creating {
             dependsOn(commonMain)
+            dependencies {
+                implementation(libs.ktor.client.darwin)
+            }
         }
-        val iosX64Main by getting
-        val iosArm64Main by getting
-        val iosSimulatorArm64Main by getting
-        iosX64Main.dependsOn(iosMain)
-        iosArm64Main.dependsOn(iosMain)
-        iosSimulatorArm64Main.dependsOn(iosMain)
+        val iosX64Main by getting {
+            dependsOn(iosMain)
+        }
+        val iosArm64Main by getting {
+            dependsOn(iosMain)
+        }
+        val iosSimulatorArm64Main by getting {
+            dependsOn(iosMain)
+        }
         val iosTest by creating {
             dependsOn(commonTest)
         }
-        val iosX64Test by getting
-        val iosArm64Test by getting
-        val iosSimulatorArm64Test by getting
-        iosX64Test.dependsOn(iosTest)
-        iosArm64Test.dependsOn(iosTest)
-        iosSimulatorArm64Test.dependsOn(iosTest)
-        iosMain.dependencies {
-            implementation(libs.ktor.client.darwin)
+        val iosX64Test by getting {
+            dependsOn(iosTest)
+        }
+        val iosArm64Test by getting {
+            dependsOn(iosTest)
+        }
+        val iosSimulatorArm64Test by getting {
+            dependsOn(iosTest)
         }
     }
     targets.withType<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget> {
         binaries.framework {
             baseName = "shared"
-            isStatic = false // optional
+            isStatic = false
         }
     }
 }
@@ -102,6 +96,13 @@ android {
         minSdk = libs.versions.android.minSdk.get().toInt()
     }
 }
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.inputStream().use { localProperties.load(it) }
+}
+val apiKey = localProperties.getProperty("exchangeapikey") ?: ""
 
 tasks.register("generateApiKeyFile") {
     doLast {

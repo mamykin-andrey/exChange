@@ -6,7 +6,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import ru.mamykin.exchange.databinding.ItemCurrencyRateBinding
-import ru.mamykin.exchange.presentation.CurrencyRateViewData
+import ru.mamykin.exchange.presentation.AndroidCurrencyRateViewData
 import ru.mamykin.exchange.presentation.CurrentCurrencyRate
 
 internal class CurrencyRateViewHolder(
@@ -16,7 +16,7 @@ internal class CurrencyRateViewHolder(
     private var amountTextWatcher: TextWatcher? = null
 
     fun bind(
-        viewData: CurrencyRateViewData,
+        viewData: AndroidCurrencyRateViewData,
         onCurrencyOrAmountChanged: (currentCurrency: CurrentCurrencyRate) -> Unit,
     ) {
         binding.textCurrencyCode.text = viewData.code
@@ -31,13 +31,13 @@ internal class CurrencyRateViewHolder(
         amountTextWatcher = null
     }
 
-    private fun bindAmount(viewData: CurrencyRateViewData) = binding.apply {
+    private fun bindAmount(viewData: AndroidCurrencyRateViewData) = binding.apply {
         binding.editExchangeAmount.setText(viewData.amountStr)
         viewData.selectionPosition?.let(binding.editExchangeAmount::setSelection)
     }
 
     private fun subscribeToEvents(
-        viewData: CurrencyRateViewData,
+        viewData: AndroidCurrencyRateViewData,
         onCurrencyOrAmountChanged: (currentCurrency: CurrentCurrencyRate) -> Unit,
     ) {
         binding.editExchangeAmount.setOnFocusChangeListener { _, focused ->

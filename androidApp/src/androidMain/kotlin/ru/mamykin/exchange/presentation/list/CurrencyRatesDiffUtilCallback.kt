@@ -1,15 +1,18 @@
 package ru.mamykin.exchange.presentation.list
 
 import androidx.recyclerview.widget.DiffUtil
-import ru.mamykin.exchange.presentation.CurrencyRateViewData
+import ru.mamykin.exchange.presentation.AndroidCurrencyRateViewData
 
-internal class CurrencyRatesDiffUtilCallback : DiffUtil.ItemCallback<CurrencyRateViewData>() {
+internal class CurrencyRatesDiffUtilCallback : DiffUtil.ItemCallback<AndroidCurrencyRateViewData>() {
 
-    override fun areItemsTheSame(oldItem: CurrencyRateViewData, newItem: CurrencyRateViewData): Boolean {
+    override fun areItemsTheSame(oldItem: AndroidCurrencyRateViewData, newItem: AndroidCurrencyRateViewData): Boolean {
         return oldItem.code == newItem.code
     }
 
-    override fun areContentsTheSame(oldItem: CurrencyRateViewData, newItem: CurrencyRateViewData): Boolean {
+    override fun areContentsTheSame(
+        oldItem: AndroidCurrencyRateViewData,
+        newItem: AndroidCurrencyRateViewData
+    ): Boolean {
         return oldItem == newItem
     }
 }

@@ -5,6 +5,10 @@ import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.launch
 import ru.mamykin.exchange.R
 import ru.mamykin.exchange.core.di.Scopes
 import ru.mamykin.exchange.databinding.ActivityConverterBinding
@@ -53,12 +57,30 @@ internal class ConverterActivity : AppCompatActivity() {
     }
 
     private fun initViewModel() {
-        viewModel.isLoading.observe(this) { showLoading(it) }
-        viewModel.rates.observe(this) { showRates(it) }
-        viewModel.error.observe(this) { showError(getString(it)) }
-        viewModel.currentRateChanged.observe(this) {
-            Handler().post {
-                binding.rvRates.scrollToPosition(0)
+        launchObserve {
+            viewModel.isLoading.collect { showLoading(it) }
+        }
+        launchObserve {
+            viewModel.rates.collect {
+                it?.let { it1 -> showRates(RateViewDataMapper.transform(it1, this@ConverterActivity)) }
+            }
+        }
+        launchObserve {
+            viewModel.error.collect { it?.let { it1 -> showError(it1) } }
+        }
+        launchObserve {
+            viewModel.currentRateChanged.collect {
+                Handler().post {
+                    binding.rvRates.scrollToPosition(0)
+                }
+            }
+        }
+    }
+
+    private fun launchObserve(observe: suspend () -> Unit) {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                observe()
             }
         }
     }
@@ -69,13 +91,14 @@ internal class ConverterActivity : AppCompatActivity() {
     }
 
     private fun showLoading(show: Boolean) = binding.apply {
-        vLoadingError.root.isVisible = false
+        vLoadingError.root.isVisible = !show
         rvRates.isVisible = !show
         pbLoading.isVisible = show
     }
 
 
-    private fun showRates(rates: List<CurrencyRateViewData>) = binding.apply {
+    private fun showRates(rates: List<AndroidCurrencyRateViewData>) = binding.apply {
+        showLoading(false)
         pbLoading.isVisible = false
         vLoadingError.root.isVisible = false
         rvRates.isVisible = true

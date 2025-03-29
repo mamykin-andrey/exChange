@@ -1,28 +1,26 @@
 package ru.mamykin.exchange.presentation
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import ru.mamykin.exchange.R
 import ru.mamykin.exchange.domain.ConverterInteractor
 import ru.mamykin.exchange.domain.RateEntity
-import javax.inject.Inject
 
-internal class ConverterViewModel @Inject constructor(
+class ConverterViewModel(
     private val interactor: ConverterInteractor,
-    private val viewDataMapper: RateViewDataMapper,
-) : ViewModel() {
-
+) {
+    private val viewModelScope = CoroutineScope(Dispatchers.Main.immediate + SupervisorJob())
     private var ratesJob: Job? = null
     private var currentCurrency: CurrentCurrencyRate? = null
 
-    val isLoading = MutableLiveData(true)
-    val rates = MutableLiveData<List<CurrencyRateViewData>>()
-    val error = MutableLiveData<Int>()
-    val currentRateChanged = MutableLiveData<Unit>()
+    val isLoading = MutableStateFlow(true)
+    val rates = MutableStateFlow<CurrencyRatesViewData?>(null)
+    val error = MutableStateFlow<String?>(null)
+    val currentRateChanged = MutableStateFlow<Unit?>(null)
 
     fun startRatesLoading() {
         loadRates(null, true)
@@ -46,12 +44,12 @@ internal class ConverterViewModel @Inject constructor(
         currentCurrency: CurrentCurrencyRate?,
         currencyChanged: Boolean,
     ) {
+        isLoading.value = true
         ratesJob?.cancel()
-        ratesJob = interactor.getRates(currentCurrency, currencyChanged)
-            .onEach {
-                isLoading.postValue(false)
-                onRatesLoaded(it, currentCurrency, currencyChanged)
-            }.launchIn(viewModelScope)
+        ratesJob = interactor.getRates(currentCurrency, currencyChanged).onEach {
+            isLoading.value = false
+            onRatesLoaded(it, currentCurrency, currencyChanged)
+        }.launchIn(viewModelScope)
     }
 
     private fun onRatesLoaded(
@@ -61,13 +59,14 @@ internal class ConverterViewModel @Inject constructor(
     ) {
         result.fold(
             onSuccess = {
-                rates.postValue(viewDataMapper.transform(it, currentCurrency))
+                rates.value = CurrencyRatesViewData(it, currentCurrency)
                 if (currencyChanged) {
-                    currentRateChanged.postValue(Unit)
+                    currentRateChanged.value = Unit
                 }
             },
             onFailure = {
-                error.postValue(R.string.error_network)
+                // error.postValue(R.string.error_network)
+                error.value = "Network error, please try again"
                 ratesJob?.cancel() // let the user retry when needed
             },
         )

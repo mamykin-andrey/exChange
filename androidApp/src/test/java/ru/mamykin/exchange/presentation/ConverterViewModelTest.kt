@@ -41,9 +41,9 @@ class ConverterViewModelTest {
         viewDataMapper = viewDataMapper,
     )
     private val rates1 = listOf(RateEntity(TEST_CURRENCY, 10f))
-    private val ratesViewData1 = listOf(CurrencyRateViewData(TEST_CURRENCY, "10.0", 0, null))
+    private val ratesViewData1 = listOf(CurrencyRatesViewData(TEST_CURRENCY, "10.0", 0, null))
     private val rates2 = listOf(RateEntity(TEST_CURRENCY, 20f))
-    private val ratesViewData2 = listOf(CurrencyRateViewData(TEST_CURRENCY, "20.0", 0, null))
+    private val ratesViewData2 = listOf(CurrencyRatesViewData(TEST_CURRENCY, "20.0", 0, null))
 
     @Before
     fun setUp() {

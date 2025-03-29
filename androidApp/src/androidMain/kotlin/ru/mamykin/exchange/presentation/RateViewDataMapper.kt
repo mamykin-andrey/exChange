@@ -3,23 +3,19 @@ package ru.mamykin.exchange.presentation
 import android.content.Context
 import ru.mamykin.exchange.R
 import ru.mamykin.exchange.core.getDrawableResId
-import ru.mamykin.exchange.domain.RateEntity
-import javax.inject.Inject
 
-internal class RateViewDataMapper @Inject constructor(
-    private val context: Context
-) {
-    companion object {
-        private const val ICON_PREFIX = "cur_icon_"
-        private const val AMOUNT_FORMAT = "%.2f"
-    }
+internal object RateViewDataMapper {
 
+    private const val ICON_PREFIX = "cur_icon_"
+    private const val AMOUNT_FORMAT = "%.2f"
     private val defaultIcon = R.drawable.cur_icon_unknown
 
     fun transform(
-        entities: List<RateEntity>,
-        currentCurrencyRate: CurrentCurrencyRate? = null,
-    ): List<CurrencyRateViewData> {
+        viewData: CurrencyRatesViewData,
+        context: Context,
+    ): List<AndroidCurrencyRateViewData> {
+        val entities = viewData.rates
+        val currentCurrencyRate = viewData.currentCurrencyRate
         return entities.map {
             val formattedAmount = if (it.code == currentCurrencyRate?.code)
                 currentCurrencyRate.amountStr
@@ -29,16 +25,16 @@ internal class RateViewDataMapper @Inject constructor(
                 currentCurrencyRate.selectionPosition
             } else
                 null
-            CurrencyRateViewData(
+            AndroidCurrencyRateViewData(
                 code = it.code,
                 amountStr = formattedAmount,
-                icon = mapIcon(it.code),
+                icon = mapIcon(it.code, context),
                 selectionPosition = selectionPosition,
             )
         }
     }
 
-    private fun mapIcon(currencyCode: String): Int {
+    private fun mapIcon(currencyCode: String, context: Context): Int {
         return context.getDrawableResId(
             ICON_PREFIX,
             currencyCode.lowercase(),
