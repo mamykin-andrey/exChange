@@ -17,6 +17,7 @@ class RatesNetworkClient {
         const val BASE_URL = "http://api.exchangeratesapi.io/"
     }
 
+    private val apiKey = ApiKey.VALUE
     private val httpClient = HttpClient {
         install(ContentNegotiation) {
             json(Json {
@@ -33,7 +34,7 @@ class RatesNetworkClient {
 
     suspend fun getRates(requestedCurrencyCodes: String = "RUB,EUR,USD,JPY"): RateListResponse {
         val response =
-            httpClient.get("$BASE_URL/v1/latest?access_key=d5822d51d03477b920a940c00f8d36d3&format=1&symbols=$requestedCurrencyCodes")
+            httpClient.get("$BASE_URL/v1/latest?access_key=$apiKey&format=1&symbols=$requestedCurrencyCodes")
         return response.body()
     }
 }

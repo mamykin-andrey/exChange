@@ -1,11 +1,18 @@
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlin.serialization)
 }
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.inputStream().use { localProperties.load(it) }
+}
+val apiKey = localProperties.getProperty("exchangeapikey") ?: ""
 
 kotlin {
     androidTarget {
@@ -52,6 +59,9 @@ kotlin {
                 implementation(libs.mockk)
             }
         }
+        val commonMain by getting {
+            kotlin.srcDir("$buildDir/generated/commonMain/kotlin")
+        }
     }
 }
 
@@ -65,4 +75,25 @@ android {
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()
     }
+}
+
+tasks.register("generateApiKeyFile") {
+    doLast {
+        val dir = project.file("$buildDir/generated/commonMain/kotlin/ru/mamykin/exchange/config")
+        dir.mkdirs()
+
+        val file = File(dir, "ApiKey.kt")
+        file.writeText(
+            """
+            // Generated file, do not edit!
+            object ApiKey {
+                const val VALUE = "$apiKey"
+            }
+        """.trimIndent()
+        )
+    }
+}
+
+tasks.named("preBuild") {
+    dependsOn("generateApiKeyFile")
 }
