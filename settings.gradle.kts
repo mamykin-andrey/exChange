@@ -1,4 +1,4 @@
-rootProject.name = "kmm-basic-sample"
+rootProject.name = "exChange"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
@@ -28,5 +28,5 @@ dependencyResolutionManagement {
     }
 }
 
-include(":app")
+include(":androidApp")
 include(":shared")
