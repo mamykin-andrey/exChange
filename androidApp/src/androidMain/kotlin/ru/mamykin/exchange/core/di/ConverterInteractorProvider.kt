@@ -1,6 +1,5 @@
 package ru.mamykin.exchange.core.di
 
-import kotlinx.coroutines.Dispatchers
 import ru.mamykin.exchange.data.RatesRepository
 import ru.mamykin.exchange.domain.ConverterInteractor
 import javax.inject.Inject
@@ -10,5 +9,5 @@ internal class ConverterInteractorProvider @Inject constructor(
     private val ratesRepository: RatesRepository,
 ) : Provider<ConverterInteractor> {
 
-    override fun get() = ConverterInteractor(ratesRepository, Dispatchers.IO)
+    override fun get() = ConverterInteractor(ratesRepository)
 }

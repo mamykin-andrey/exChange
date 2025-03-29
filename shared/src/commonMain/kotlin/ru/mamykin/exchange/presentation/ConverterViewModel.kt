@@ -22,6 +22,12 @@ class ConverterViewModel(
     val error = MutableStateFlow<String?>(null)
     val currentRateChanged = MutableStateFlow<Unit?>(null)
 
+    fun observeData(onEach: (CurrencyRatesViewData) -> Unit) {
+        rates
+            .onEach { it?.let { it1 -> onEach(it1) } }
+            .launchIn(viewModelScope)
+    }
+
     fun startRatesLoading() {
         loadRates(null, true)
     }
